@@ -8,17 +8,24 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
 
+import androidx.annotation.Nullable;
+
 import com.thetechnoobs.typicaltowerdefence.R;
+import com.thetechnoobs.typicaltowerdefence.enemys.TestRect;
 import com.thetechnoobs.typicaltowerdefence.towers.towerData.ArrowTowerData;
 import com.thetechnoobs.typicaltowerdefence.towers.towerData.CannonTowerData;
 import com.thetechnoobs.typicaltowerdefence.towers.towerData.TroopsTowerData;
 import com.thetechnoobs.typicaltowerdefence.towers.towerData.WizardTowerData;
+
+import java.lang.annotation.Target;
+import java.util.ArrayList;
 
 public class PlotHandler {
     private final Context context;
     Bitmap availablePlotBitmap;
     RectF location;
     int arrayPos;
+    int[] screenSize;
     boolean available = true;
     Paint debugPaint = new Paint();
     int towerType = 0; //0 = none, 1 = arrow, 2 = cannon, 3 = troops, 4 = wizard
@@ -68,12 +75,13 @@ public class PlotHandler {
         }
     }
 
-    public void update(){
+    public void update(ArrayList<TestRect> targets){
         if(!isAvailable()){
             switch (towerType){
                 case 0:
                     break;
                 case 1:
+                    arrowTower.updateTargets(targets);
                     arrowTower.update();
                     break;
                 case 2:
@@ -140,7 +148,7 @@ public class PlotHandler {
     private void settupNewArrowTowerOnPlot() {
         arrowTowerData = new ArrowTowerData(context);
         arrowTowerData.setDefalutValues();
-        arrowTower = new ArrowTower(context, location, arrowTowerData);
+        arrowTower = new ArrowTower(context, location, arrowTowerData, screenSize);
     }
 
     WizardTower wizardTower;
@@ -189,5 +197,9 @@ public class PlotHandler {
 
     public WizardTowerData getWizardData(){
         return wizardTowerData;
+    }
+
+    public void setScreenSize(int[] screenSize) {
+        this.screenSize = screenSize;
     }
 }

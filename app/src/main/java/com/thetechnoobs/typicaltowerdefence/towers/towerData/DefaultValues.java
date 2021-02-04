@@ -2,7 +2,7 @@ package com.thetechnoobs.typicaltowerdefence.towers.towerData;
 
 public class DefaultValues {
     public static final int arrowDamage = 1;
-    public static final int arrowRange = 5;
+    public static final int arrowRange = 4;
     public static final float arrowFireRate = 1.0f;
     public static final int arrowPrice = 50;
 

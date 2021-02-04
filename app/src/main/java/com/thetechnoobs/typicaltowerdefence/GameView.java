@@ -15,7 +15,11 @@ import com.thetechnoobs.typicaltowerdefence.ui.InfoBuyPage;
 import com.thetechnoobs.typicaltowerdefence.ui.InfoUpgradePage;
 import com.thetechnoobs.typicaltowerdefence.ui.TowerBuySelectWheel;
 
+import java.lang.annotation.Target;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
 public class GameView extends SurfaceView implements Runnable {
     boolean running = true;
@@ -29,8 +33,7 @@ public class GameView extends SurfaceView implements Runnable {
     TowerBuySelectWheel towerSelectionWheel;
     InfoBuyPage infoBuyPage;
     InfoUpgradePage infoUpgradePage;
-    TestRect testRect;
-
+    ArrayList<TestRect> targets = new ArrayList<>();
 
     public GameView(Context context, int[] screenSize) {
         super(context);
@@ -41,8 +44,6 @@ public class GameView extends SurfaceView implements Runnable {
         infoBuyPage = new InfoBuyPage(context);
         infoUpgradePage = new InfoUpgradePage(context);
         towerSelectionWheel = new TowerBuySelectWheel(getResources(), infoBuyPage);
-
-        testRect = new TestRect((int) Tools.convertDpToPixel(165), (int) Tools.convertDpToPixel(400), screenSize);
 
     }
 
@@ -79,11 +80,22 @@ public class GameView extends SurfaceView implements Runnable {
         }
     }
 
+
     private void tick() {
-        testRect.update();
+        if(targets.size() < 3){
+            addTestEnemy();
+        }
+
+        for(int t = 0; t < targets.size(); t++){
+            if(targets.get(t).shouldRemove()){
+                targets.remove(t);
+            }else{
+                targets.get(t).update();
+            }
+        }
 
         for (PlotHandler plotHandler: plotHandlers){
-            plotHandler.update();
+            plotHandler.update(targets);
         }
     }
 
@@ -94,7 +106,10 @@ public class GameView extends SurfaceView implements Runnable {
             mapOne.draw(canvas);
             coinHeader.draw(canvas);
 
-            testRect.draw(canvas);
+
+            for(TestRect t: targets){
+                t.draw(canvas);
+            }
 
             for (PlotHandler plotHandler : plotHandlers) {
                 plotHandler.draw(canvas);
@@ -182,11 +197,28 @@ public class GameView extends SurfaceView implements Runnable {
         }
     }
 
+    long lastShotTime = 0;
+    public void addTestEnemy(){
+        long curTime = System.currentTimeMillis();
+
+        if(curTime - lastShotTime >= 2000){
+            lastShotTime = curTime;
+            TestRect testRect = new TestRect(
+                    (int) Tools.convertDpToPixel(165),
+                    (int) Tools.convertDpToPixel(800),
+                    screenSize);
+            targets.add(testRect);
+        }
+    }
+
     MapOne mapOne;
 
     private void setMapData() {
         mapOne = new MapOne(screenSize, getResources(), getContext());
         plotHandlers = mapOne.getMapOnePlots();
+        for(PlotHandler handler: plotHandlers){
+            handler.setScreenSize(screenSize);
+        }
     }
 
     public void stopRunning() {

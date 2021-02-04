@@ -11,9 +11,9 @@ import android.graphics.RectF;
 import com.thetechnoobs.typicaltowerdefence.R;
 import com.thetechnoobs.typicaltowerdefence.enemys.TestRect;
 
-public class Arrow {
+public class CannonBall {
 
-    Bitmap arrow;
+    Bitmap cannonBallBitmap;
     int curX, curY;
     float xVelocity, yVelocity;
     Context context;
@@ -23,20 +23,20 @@ public class Arrow {
     private boolean removeMe = false;
     Paint testPaint = new Paint();
 
-    public Arrow(int x, int y, Context context, TestRect target, int[] screenSize) {
+    public CannonBall(int x, int y, Context context, TestRect target, int[] screenSize) {
         curX = x;
         curY = y;
         this.screenSize = screenSize;
         this.target = target;
         this.context = context;
 
-        arrow = BitmapFactory.decodeResource(context.getResources(), R.drawable.arrow);
+        cannonBallBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.cannon_ball);
         calculateVolocity();
-        orientateArrow();
+        orientateBall();
     }
 
     public void draw(Canvas canvas) {
-        canvas.drawBitmap(arrow, getCurX(), getCurY(), null);
+        canvas.drawBitmap(cannonBallBitmap, getCurX(), getCurY(), null);
     }
 
     public void update() {
@@ -57,8 +57,8 @@ public class Arrow {
         return new RectF(
                 getCurX(),
                 getCurY(),
-                getCurX() + arrow.getWidth(),
-                getCurY() + arrow.getHeight());
+                getCurX() + cannonBallBitmap.getWidth(),
+                getCurY() + cannonBallBitmap.getHeight());
     }
 
     public boolean shouldRemove() {
@@ -97,9 +97,9 @@ public class Arrow {
         return curY;
     }
 
-    private void orientateArrow() {
+    private void orientateBall() {
         double temp = Math.atan2(yVelocity, xVelocity);
-        arrow = rotateBitmap(arrow, (float) (temp * 62));
+        cannonBallBitmap = rotateBitmap(cannonBallBitmap, (float) (temp * 120));
     }
 
     private Bitmap rotateBitmap(Bitmap original, float degrees) {
@@ -132,4 +132,5 @@ public class Arrow {
             yVelocity *= -1;
         }
     }
+
 }

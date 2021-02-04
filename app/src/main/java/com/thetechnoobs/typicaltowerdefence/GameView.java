@@ -80,9 +80,8 @@ public class GameView extends SurfaceView implements Runnable {
         }
     }
 
-
     private void tick() {
-        if(targets.size() < 3){
+        if(targets.size() < 4){
             addTestEnemy();
         }
 

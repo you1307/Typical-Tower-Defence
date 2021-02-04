@@ -85,6 +85,7 @@ public class PlotHandler {
                     arrowTower.update();
                     break;
                 case 2:
+                    cannonTower.updateTargets(targets);
                     cannonTower.update();
                     break;
                 case 3:
@@ -139,7 +140,7 @@ public class PlotHandler {
     private void settupNewCannonTowerOnPlot() {
         cannonTowerData = new CannonTowerData(context);
         cannonTowerData.setDefalutValues();
-        cannonTower = new CannonTower(context, location);
+        cannonTower = new CannonTower(context, location, cannonTowerData, screenSize);
     }
 
 

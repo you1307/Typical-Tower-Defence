@@ -118,6 +118,7 @@ public class ArrowTower {
     boolean hasTarget = false;
     TestRect lastCheck = null;
     private void updateTarget() {
+        Log.v("testing", "size: "+ targets.size());
 
         for (TestRect enemy : targets) {
             if(lastCheck == null){
@@ -171,8 +172,6 @@ public class ArrowTower {
                 focusedTarget,
                 screenSize);
         arrows.add(newArrow);
-
-        Log.v("testing", "ammount: " + arrows.size());
     }
 
     long ticks = 0;

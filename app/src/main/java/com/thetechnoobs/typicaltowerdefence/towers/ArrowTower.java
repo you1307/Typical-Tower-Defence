@@ -14,7 +14,7 @@ import android.util.Log;
 
 import com.thetechnoobs.typicaltowerdefence.R;
 import com.thetechnoobs.typicaltowerdefence.Tools;
-import com.thetechnoobs.typicaltowerdefence.enemys.TestRect;
+import com.thetechnoobs.typicaltowerdefence.enemys.EasySlowEnemy;
 import com.thetechnoobs.typicaltowerdefence.projectials.Arrow;
 import com.thetechnoobs.typicaltowerdefence.towers.towerData.ArrowTowerData;
 
@@ -27,8 +27,8 @@ public class ArrowTower {
     RectF location;
     Rect frame;
     Context context;
-    ArrayList<TestRect> targets = new ArrayList<>();
-    TestRect focusedTarget;
+    ArrayList<EasySlowEnemy> targets = new ArrayList<>();
+    EasySlowEnemy focusedTarget;
     int arrowSpriteWidth;
     int arrowSpriteHeight;
     int arrowSpriteFrameLocX = 1;
@@ -111,31 +111,32 @@ public class ArrowTower {
 
     }
 
-    public void updateTargets(ArrayList<TestRect> targets) {
+    public void updateTargets(ArrayList<EasySlowEnemy> targets) {
         this.targets = targets;
     }
 
     boolean hasTarget = false;
-    TestRect lastCheck = null;
-    private void updateTarget() {
-        Log.v("testing", "size: "+ targets.size());
+    EasySlowEnemy lastCheck = null;
 
-        for (TestRect enemy : targets) {
-            if(lastCheck == null){
+    private void updateTarget() {
+        Log.v("testing", "size: " + targets.size());
+
+        for (EasySlowEnemy enemy : targets) {
+            if (lastCheck == null) {
                 lastCheck = enemy;
             }
 
-            if(enemy.getHitbox().intersect(getRangeBox()) && !enemy.shouldRemove()){
-                if(enemy.getDistanceMoved() >= lastCheck.getDistanceMoved()){
+            if (enemy.getHitbox().intersect(getRangeBox()) && !enemy.shouldRemove()) {
+                if (enemy.getDistanceMoved() >= lastCheck.getDistanceMoved()) {
                     focusedTarget = enemy;
                     hasTarget = true;
-                }else if(enemy.getDistanceMoved() < lastCheck.getDistanceMoved() && lastCheck.getHitbox().intersect(getRangeBox())){
+                } else if (enemy.getDistanceMoved() < lastCheck.getDistanceMoved() && lastCheck.getHitbox().intersect(getRangeBox())) {
                     focusedTarget = lastCheck;
                     hasTarget = true;
-                }else if(enemy.getHitbox().intersect(getRangeBox())){
+                } else if (enemy.getHitbox().intersect(getRangeBox())) {
                     focusedTarget = enemy;
                     hasTarget = true;
-                }else{
+                } else {
                     hasTarget = false;
                 }
             }
@@ -143,7 +144,7 @@ public class ArrowTower {
             lastCheck = enemy;
         }
 
-        if(focusedTarget != null && !focusedTarget.getHitbox().intersect(getRangeBox())){
+        if (focusedTarget != null && !focusedTarget.getHitbox().intersect(getRangeBox())) {
             focusedTarget = null;
             hasTarget = false;
         }

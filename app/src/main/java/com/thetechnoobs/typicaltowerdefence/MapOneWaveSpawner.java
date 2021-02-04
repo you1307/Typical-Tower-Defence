@@ -2,10 +2,6 @@ package com.thetechnoobs.typicaltowerdefence;
 
 import android.graphics.Canvas;
 
-import com.thetechnoobs.typicaltowerdefence.enemys.TestRect;
-
-import java.util.Calendar;
-
 public class MapOneWaveSpawner {
     int[] screenSize;
 

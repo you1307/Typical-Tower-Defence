@@ -8,16 +8,13 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
 
-import androidx.annotation.Nullable;
-
 import com.thetechnoobs.typicaltowerdefence.R;
-import com.thetechnoobs.typicaltowerdefence.enemys.TestRect;
+import com.thetechnoobs.typicaltowerdefence.enemys.EasySlowEnemy;
 import com.thetechnoobs.typicaltowerdefence.towers.towerData.ArrowTowerData;
 import com.thetechnoobs.typicaltowerdefence.towers.towerData.CannonTowerData;
 import com.thetechnoobs.typicaltowerdefence.towers.towerData.TroopsTowerData;
 import com.thetechnoobs.typicaltowerdefence.towers.towerData.WizardTowerData;
 
-import java.lang.annotation.Target;
 import java.util.ArrayList;
 
 public class PlotHandler {
@@ -75,7 +72,7 @@ public class PlotHandler {
         }
     }
 
-    public void update(ArrayList<TestRect> targets){
+    public void update(ArrayList<EasySlowEnemy> targets){
         if(!isAvailable()){
             switch (towerType){
                 case 0:
@@ -92,6 +89,7 @@ public class PlotHandler {
                     troopsTower.update();
                     break;
                 case 4:
+                    wizardTower.updateTargets(targets);
                     wizardTower.update();
                     break;
             }
@@ -157,7 +155,7 @@ public class PlotHandler {
     private void settupNewWizardTowerOnPlot(){
         wizardTowerData = new WizardTowerData(context);
         wizardTowerData.setDefalutValues();
-        wizardTower = new WizardTower(context, location);
+        wizardTower = new WizardTower(context, location, wizardTowerData, screenSize);
     }
 
     public int getOccupant(){

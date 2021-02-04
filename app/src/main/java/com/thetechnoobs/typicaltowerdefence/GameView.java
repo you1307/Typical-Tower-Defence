@@ -7,7 +7,7 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceView;
 
-import com.thetechnoobs.typicaltowerdefence.enemys.TestRect;
+import com.thetechnoobs.typicaltowerdefence.enemys.EasySlowEnemy;
 import com.thetechnoobs.typicaltowerdefence.maps.MapOne;
 import com.thetechnoobs.typicaltowerdefence.towers.PlotHandler;
 import com.thetechnoobs.typicaltowerdefence.ui.CoinHeader;
@@ -15,11 +15,7 @@ import com.thetechnoobs.typicaltowerdefence.ui.InfoBuyPage;
 import com.thetechnoobs.typicaltowerdefence.ui.InfoUpgradePage;
 import com.thetechnoobs.typicaltowerdefence.ui.TowerBuySelectWheel;
 
-import java.lang.annotation.Target;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
 
 public class GameView extends SurfaceView implements Runnable {
     boolean running = true;
@@ -33,7 +29,7 @@ public class GameView extends SurfaceView implements Runnable {
     TowerBuySelectWheel towerSelectionWheel;
     InfoBuyPage infoBuyPage;
     InfoUpgradePage infoUpgradePage;
-    ArrayList<TestRect> targets = new ArrayList<>();
+    ArrayList<EasySlowEnemy> targets = new ArrayList<>();
 
     public GameView(Context context, int[] screenSize) {
         super(context);
@@ -106,7 +102,7 @@ public class GameView extends SurfaceView implements Runnable {
             coinHeader.draw(canvas);
 
 
-            for(TestRect t: targets){
+            for(EasySlowEnemy t: targets){
                 t.draw(canvas);
             }
 
@@ -202,11 +198,11 @@ public class GameView extends SurfaceView implements Runnable {
 
         if(curTime - lastShotTime >= 2000){
             lastShotTime = curTime;
-            TestRect testRect = new TestRect(
+            EasySlowEnemy easySlowEnemy = new EasySlowEnemy(
                     (int) Tools.convertDpToPixel(165),
                     (int) Tools.convertDpToPixel(800),
                     screenSize);
-            targets.add(testRect);
+            targets.add(easySlowEnemy);
         }
     }
 

@@ -9,21 +9,20 @@ import android.graphics.Paint;
 import android.graphics.RectF;
 
 import com.thetechnoobs.typicaltowerdefence.R;
-import com.thetechnoobs.typicaltowerdefence.enemys.TestRect;
+import com.thetechnoobs.typicaltowerdefence.enemys.EasySlowEnemy;
 
 public class Arrow {
-
     Bitmap arrow;
     int curX, curY;
     float xVelocity, yVelocity;
     Context context;
-    TestRect target;
+    EasySlowEnemy target;
     int[] screenSize;
     int speed = 15;
     private boolean removeMe = false;
     Paint testPaint = new Paint();
 
-    public Arrow(int x, int y, Context context, TestRect target, int[] screenSize) {
+    public Arrow(int x, int y, Context context, EasySlowEnemy target, int[] screenSize) {
         curX = x;
         curY = y;
         this.screenSize = screenSize;

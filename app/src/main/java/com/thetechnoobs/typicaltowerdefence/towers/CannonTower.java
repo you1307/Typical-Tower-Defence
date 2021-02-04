@@ -14,10 +14,8 @@ import android.util.Log;
 
 import com.thetechnoobs.typicaltowerdefence.R;
 import com.thetechnoobs.typicaltowerdefence.Tools;
-import com.thetechnoobs.typicaltowerdefence.enemys.TestRect;
-import com.thetechnoobs.typicaltowerdefence.projectials.Arrow;
+import com.thetechnoobs.typicaltowerdefence.enemys.EasySlowEnemy;
 import com.thetechnoobs.typicaltowerdefence.projectials.CannonBall;
-import com.thetechnoobs.typicaltowerdefence.towers.towerData.ArrowTowerData;
 import com.thetechnoobs.typicaltowerdefence.towers.towerData.CannonTowerData;
 
 import java.util.ArrayList;
@@ -32,8 +30,8 @@ public class CannonTower {
     boolean shooting = false;
     private boolean playingShootAnimation = false;
     CannonTowerData cannonTowerData;
-    ArrayList<TestRect> targets = new ArrayList<>();
-    TestRect focusedTarget;
+    ArrayList<EasySlowEnemy> targets = new ArrayList<>();
+    EasySlowEnemy focusedTarget;
     Paint testPaint = new Paint();
     ArrayList<CannonBall> cannonBalls = new ArrayList<>();
     int[] screenSize;
@@ -123,7 +121,7 @@ public class CannonTower {
         cannonBalls.add(newBall);
     }
 
-    public void updateTargets(ArrayList<TestRect> targets) {
+    public void updateTargets(ArrayList<EasySlowEnemy> targets) {
         this.targets = targets;
     }
 
@@ -144,11 +142,11 @@ public class CannonTower {
     }
 
     boolean hasTarget = false;
-    TestRect lastCheck = null;
+    EasySlowEnemy lastCheck = null;
     private void updateTarget() {
         Log.v("testing", "size: "+ targets.size());
 
-        for (TestRect enemy : targets) {
+        for (EasySlowEnemy enemy : targets) {
             if(lastCheck == null){
                 lastCheck = enemy;
             }

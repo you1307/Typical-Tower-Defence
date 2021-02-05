@@ -14,7 +14,7 @@ import android.util.Log;
 
 import com.thetechnoobs.typicaltowerdefence.R;
 import com.thetechnoobs.typicaltowerdefence.Tools;
-import com.thetechnoobs.typicaltowerdefence.enemys.EasySlowEnemy;
+import com.thetechnoobs.typicaltowerdefence.enemys.EnemyBase;
 import com.thetechnoobs.typicaltowerdefence.projectials.CannonBall;
 import com.thetechnoobs.typicaltowerdefence.towers.towerData.CannonTowerData;
 
@@ -30,8 +30,8 @@ public class CannonTower {
     boolean shooting = false;
     private boolean playingShootAnimation = false;
     CannonTowerData cannonTowerData;
-    ArrayList<EasySlowEnemy> targets = new ArrayList<>();
-    EasySlowEnemy focusedTarget;
+    ArrayList<EnemyBase> targets = new ArrayList<>();
+    EnemyBase focusedTarget;
     Paint testPaint = new Paint();
     ArrayList<CannonBall> cannonBalls = new ArrayList<>();
     int[] screenSize;
@@ -121,7 +121,7 @@ public class CannonTower {
         cannonBalls.add(newBall);
     }
 
-    public void updateTargets(ArrayList<EasySlowEnemy> targets) {
+    public void updateTargets(ArrayList<EnemyBase> targets) {
         this.targets = targets;
     }
 
@@ -142,34 +142,29 @@ public class CannonTower {
     }
 
     boolean hasTarget = false;
-    EasySlowEnemy lastCheck = null;
     private void updateTarget() {
-        Log.v("testing", "size: "+ targets.size());
+        Log.v("testing", "size: " + targets.size());
 
-        for (EasySlowEnemy enemy : targets) {
-            if(lastCheck == null){
-                lastCheck = enemy;
+        for (EnemyBase enemy : targets) {
+            focusedTarget = enemy;
+
+            if(focusedTarget != null && focusedTarget.getHitbox().intersect(getRangeBox())){
+                hasTarget = true;
+                return;
+            }else if(focusedTarget != null && focusedTarget.getDistanceMoved() < enemy.getDistanceMoved() && enemy.getHitbox().intersect(getRangeBox())){
+                focusedTarget = enemy;
+                hasTarget = true;
+                return;
+            }else if (focusedTarget.shouldRemove()){
+                hasTarget = false;
+                focusedTarget = null;
+            }else{
+                hasTarget = false;
+                focusedTarget = null;
             }
-
-            if(enemy.getHitbox().intersect(getRangeBox()) && !enemy.shouldRemove()){
-                if(enemy.getDistanceMoved() >= lastCheck.getDistanceMoved()){
-                    focusedTarget = enemy;
-                    hasTarget = true;
-                }else if(enemy.getDistanceMoved() < lastCheck.getDistanceMoved() && lastCheck.getHitbox().intersect(getRangeBox())){
-                    focusedTarget = lastCheck;
-                    hasTarget = true;
-                }else if(enemy.getHitbox().intersect(getRangeBox())){
-                    focusedTarget = enemy;
-                    hasTarget = true;
-                }else{
-                    hasTarget = false;
-                }
-            }
-
-            lastCheck = enemy;
         }
 
-        if(focusedTarget != null && !focusedTarget.getHitbox().intersect(getRangeBox())){
+        if (focusedTarget != null && !focusedTarget.getHitbox().intersect(getRangeBox())) {
             focusedTarget = null;
             hasTarget = false;
         }

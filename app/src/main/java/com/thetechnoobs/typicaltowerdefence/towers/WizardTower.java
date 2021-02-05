@@ -15,6 +15,7 @@ import android.util.Log;
 import com.thetechnoobs.typicaltowerdefence.R;
 import com.thetechnoobs.typicaltowerdefence.Tools;
 import com.thetechnoobs.typicaltowerdefence.enemys.EasySlowEnemy;
+import com.thetechnoobs.typicaltowerdefence.enemys.EnemyBase;
 import com.thetechnoobs.typicaltowerdefence.projectials.WizardOrb;
 import com.thetechnoobs.typicaltowerdefence.towers.towerData.WizardTowerData;
 
@@ -30,9 +31,9 @@ public class WizardTower {
     boolean shooting = false;
     Paint testPaint = new Paint();
     WizardTowerData wizardTowerData;
-    ArrayList<EasySlowEnemy> targets = new ArrayList<>();
+    ArrayList<EnemyBase> targets = new ArrayList<>();
     ArrayList<WizardOrb> orbs = new ArrayList<>();
-    EasySlowEnemy focusedTarget;
+    EnemyBase focusedTarget;
     int[] screenSize;
     int wizardSpriteWidth;
     int wizardSpriteHeight;
@@ -125,32 +126,26 @@ public class WizardTower {
 
 
     boolean hasTarget = false;
-    EasySlowEnemy lastCheck = null;
-
     private void updateTarget() {
         Log.v("testing", "size: " + targets.size());
 
-        for (EasySlowEnemy enemy : targets) {
-            if (lastCheck == null) {
-                lastCheck = enemy;
-            }
+        for (EnemyBase enemy : targets) {
+            focusedTarget = enemy;
 
-            if (enemy.getHitbox().intersect(getRangeBox()) && !enemy.shouldRemove()) {
-                if (enemy.getDistanceMoved() >= lastCheck.getDistanceMoved()) {
-                    focusedTarget = enemy;
-                    hasTarget = true;
-                } else if (enemy.getDistanceMoved() < lastCheck.getDistanceMoved() && lastCheck.getHitbox().intersect(getRangeBox())) {
-                    focusedTarget = lastCheck;
-                    hasTarget = true;
-                } else if (enemy.getHitbox().intersect(getRangeBox())) {
-                    focusedTarget = enemy;
-                    hasTarget = true;
-                } else {
-                    hasTarget = false;
-                }
+            if(focusedTarget != null && focusedTarget.getHitbox().intersect(getRangeBox())){
+                hasTarget = true;
+                return;
+            }else if(focusedTarget != null && focusedTarget.getDistanceMoved() < enemy.getDistanceMoved() && enemy.getHitbox().intersect(getRangeBox())){
+                focusedTarget = enemy;
+                hasTarget = true;
+                return;
+            }else if (focusedTarget.shouldRemove()){
+                hasTarget = false;
+                focusedTarget = null;
+            }else{
+                hasTarget = false;
+                focusedTarget = null;
             }
-
-            lastCheck = enemy;
         }
 
         if (focusedTarget != null && !focusedTarget.getHitbox().intersect(getRangeBox())) {
@@ -159,7 +154,7 @@ public class WizardTower {
         }
     }
 
-    public void updateTargets(ArrayList<EasySlowEnemy> targets) {
+    public void updateTargets(ArrayList<EnemyBase> targets) {
         this.targets = targets;
     }
 

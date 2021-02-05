@@ -9,7 +9,7 @@ import android.graphics.Paint;
 import android.graphics.RectF;
 
 import com.thetechnoobs.typicaltowerdefence.R;
-import com.thetechnoobs.typicaltowerdefence.enemys.EasySlowEnemy;
+import com.thetechnoobs.typicaltowerdefence.enemys.EnemyBase;
 import com.thetechnoobs.typicaltowerdefence.towers.towerData.ArrowTowerData;
 import com.thetechnoobs.typicaltowerdefence.towers.towerData.CannonTowerData;
 import com.thetechnoobs.typicaltowerdefence.towers.towerData.TroopsTowerData;
@@ -72,7 +72,7 @@ public class PlotHandler {
         }
     }
 
-    public void update(ArrayList<EasySlowEnemy> targets){
+    public void update(ArrayList<EnemyBase> targets){
         if(!isAvailable()){
             switch (towerType){
                 case 0:

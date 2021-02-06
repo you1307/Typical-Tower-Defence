@@ -11,20 +11,21 @@ import android.graphics.RectF;
 import com.thetechnoobs.typicaltowerdefence.R;
 import com.thetechnoobs.typicaltowerdefence.Tools;
 import com.thetechnoobs.typicaltowerdefence.enemys.EasySlowEnemy;
+import com.thetechnoobs.typicaltowerdefence.enemys.EnemyBase;
 
 public class WizardOrb {
     Bitmap orb;
     int curX, curY;
     float xVelocity, yVelocity;
     Context context;
-    EasySlowEnemy target;
+    EnemyBase target;
     int[] screenSize;
     int speed = 8;
     private boolean removeMe = false;
     Paint testPaint = new Paint();
 
 
-    public WizardOrb(int x, int y, Context context, EasySlowEnemy target, int[] screenSize) {
+    public WizardOrb(int x, int y, Context context, EnemyBase target, int[] screenSize) {
         curX = x;
         curY = y;
         this.screenSize = screenSize;
@@ -126,19 +127,19 @@ public class WizardOrb {
 
     private void calculateVolocity() {
         float totalAllowedMovment = 1.0f;
-        float xDistanceFromTarget = Math.abs(target.getX() - getCurX());
-        float yDistanceFromTarget = Math.abs(target.getY() - getCurY());
+        float xDistanceFromTarget = Math.abs(target.getCurX() - getCurX());
+        float yDistanceFromTarget = Math.abs(target.getCurY() - getCurY());
         float totalDistanceFromTarget = xDistanceFromTarget + yDistanceFromTarget;
         float xPercentOfMovment = xDistanceFromTarget / totalDistanceFromTarget;
 
         xVelocity = xPercentOfMovment;
         yVelocity = totalAllowedMovment - xPercentOfMovment;
 
-        if (target.getX() < getCurX()) {
+        if (target.getCurX() < getCurX()) {
             xVelocity *= -1;
         }
 
-        if (target.getY() < getCurY()) {
+        if (target.getCurY() < getCurY()) {
             yVelocity *= -1;
         }
     }

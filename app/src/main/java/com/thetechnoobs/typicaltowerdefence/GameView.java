@@ -6,9 +6,15 @@ import android.graphics.RectF;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceView;
+import android.widget.Toast;
 
+import com.thetechnoobs.typicaltowerdefence.enemys.EasyFastEnemy;
 import com.thetechnoobs.typicaltowerdefence.enemys.EasySlowEnemy;
+import com.thetechnoobs.typicaltowerdefence.enemys.EnemyBase;
+import com.thetechnoobs.typicaltowerdefence.maps.MapBase;
 import com.thetechnoobs.typicaltowerdefence.maps.MapOne;
+import com.thetechnoobs.typicaltowerdefence.maps.MapThree;
+import com.thetechnoobs.typicaltowerdefence.maps.MapTwo;
 import com.thetechnoobs.typicaltowerdefence.towers.PlotHandler;
 import com.thetechnoobs.typicaltowerdefence.ui.CoinHeader;
 import com.thetechnoobs.typicaltowerdefence.ui.InfoBuyPage;
@@ -26,16 +32,19 @@ public class GameView extends SurfaceView implements Runnable {
     int[] screenSize;
     Canvas canvas;
     CoinHeader coinHeader;
+    int mapToLoad = 0;
     TowerBuySelectWheel towerSelectionWheel;
     InfoBuyPage infoBuyPage;
     InfoUpgradePage infoUpgradePage;
-    ArrayList<EasySlowEnemy> targets = new ArrayList<>();
+    ArrayList<EnemyBase> targets = new ArrayList<>();
 
-    public GameView(Context context, int[] screenSize) {
+    public GameView(Context context, int[] screenSize, int mapToLoad) {
         super(context);
+        this.mapToLoad = mapToLoad;
         this.screenSize = screenSize;
         coinHeader = new CoinHeader(getResources(), context);
-        setMapData();
+
+        setMapData(mapToLoad);
 
         infoBuyPage = new InfoBuyPage(context);
         infoUpgradePage = new InfoUpgradePage(context);
@@ -98,11 +107,11 @@ public class GameView extends SurfaceView implements Runnable {
         if (getHolder().getSurface().isValid()) {
             canvas = getHolder().lockCanvas();
 
-            mapOne.draw(canvas);
+            selectedMap().draw(canvas);
+
             coinHeader.draw(canvas);
 
-
-            for(EasySlowEnemy t: targets){
+            for(EnemyBase t: targets){
                 t.draw(canvas);
             }
 
@@ -196,23 +205,61 @@ public class GameView extends SurfaceView implements Runnable {
     public void addTestEnemy(){
         long curTime = System.currentTimeMillis();
 
-        if(curTime - lastShotTime >= 2000){
+        if(curTime - lastShotTime >= 1000){
             lastShotTime = curTime;
             EasySlowEnemy easySlowEnemy = new EasySlowEnemy(
                     (int) Tools.convertDpToPixel(165),
-                    (int) Tools.convertDpToPixel(800),
-                    screenSize);
+                    screenSize[1] + 50,
+                    screenSize, selectedMap().enemyPathPoints());
+
+            EasyFastEnemy easyFastEnemy = new EasyFastEnemy(
+                    (int) Tools.convertDpToPixel(165),
+                    screenSize[1] + 50,
+                    screenSize, selectedMap().enemyPathPoints());
+
+
             targets.add(easySlowEnemy);
+            targets.add(easyFastEnemy);
         }
     }
 
     MapOne mapOne;
+    MapTwo mapTwo;
+    MapThree mapThree;
+    private void setMapData(int mapToLoad) {
+        switch (mapToLoad){
+            case 0:
+                Toast.makeText(getContext(), "Error loading selected map", Toast.LENGTH_LONG).show();
+                return;
+            case 1:
+                mapOne = new MapOne(screenSize, getResources(), getContext());
+                plotHandlers = mapOne.getMapOnePlots();
+                break;
+            case 2:
+                mapTwo = new MapTwo(screenSize, getResources(), getContext());
+                plotHandlers = mapTwo.getMapTwoPlots();
+                break;
+            case 3:
+                mapThree = new MapThree(screenSize, getResources(), getContext());
+                plotHandlers = mapThree.getMapThreePlots();
+                break;
+        }
 
-    private void setMapData() {
-        mapOne = new MapOne(screenSize, getResources(), getContext());
-        plotHandlers = mapOne.getMapOnePlots();
         for(PlotHandler handler: plotHandlers){
             handler.setScreenSize(screenSize);
+        }
+    }
+
+    public MapBase selectedMap(){
+        switch (mapToLoad){
+            case 1:
+                return mapOne;
+            case 2:
+                return mapTwo;
+            case 3:
+                return mapThree;
+            default:
+                return null;
         }
     }
 

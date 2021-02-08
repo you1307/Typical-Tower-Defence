@@ -1,6 +1,7 @@
 package com.thetechnoobs.typicaltowerdefence.enemys;
 
 import android.graphics.Canvas;
+import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.RectF;
 
@@ -14,6 +15,7 @@ public class EnemyBase {
     float speed = Tools.convertDpToPixel(1f);
     double distanceMoved = 0;
     boolean removeMe = false;
+    Paint debugPaint = new Paint();
     int[] screenSize;
     float xVelocity, yVelocity;
     ArrayList<RectF> mapPath;
@@ -45,6 +47,9 @@ public class EnemyBase {
     }
 
     public void draw(Canvas canvas){
+//        for(int i = 0; i <mapPath.size(); i++){
+//            canvas.drawRect(mapPath.get(i), debugPaint);
+//        }
     }
 
     public void update(){
@@ -81,19 +86,19 @@ public class EnemyBase {
         float targetY = targetPoint.centerY();
 
         float totalAllowedMovment = 1.0f;
-        float xDistanceFromTarget = Math.abs(targetX - getCurX());
-        float yDistanceFromTarget = Math.abs(targetY - getCurY());
+        float xDistanceFromTarget = Math.abs(targetX - getHitbox().centerX());
+        float yDistanceFromTarget = Math.abs(targetY - getHitbox().centerY());
         float totalDistanceFromTarget = xDistanceFromTarget + yDistanceFromTarget;
         float xPercentOfMovment = xDistanceFromTarget / totalDistanceFromTarget;
 
         xVelocity = xPercentOfMovment;
         yVelocity = totalAllowedMovment - xPercentOfMovment;
 
-        if (targetX < getCurX()) {
+        if (targetX < getHitbox().centerX()) {
             xVelocity *= -1;
         }
 
-        if (targetY < getCurY()) {
+        if (targetY < getHitbox().centerY()) {
             yVelocity *= -1;
         }
     }

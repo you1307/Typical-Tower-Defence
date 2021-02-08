@@ -11,8 +11,10 @@ import com.thetechnoobs.typicaltowerdefence.towers.PlotHandler;
 
 import java.util.ArrayList;
 
+//Plot size should be 80 by 80 dp
+
 public class MapBase {
-    Bitmap mapBitmap;
+    public Bitmap mapBitmap;
     Resources resources;
     int[] screenSize;
     Context context;
@@ -20,7 +22,10 @@ public class MapBase {
     ArrayList<PlotHandler> plotHandlers;
 
     public void draw(Canvas canvas){
+    }
 
+    public Bitmap getMapBitmap() {
+        return mapBitmap;
     }
 
     public ArrayList<RectF> enemyPathPoints() {

@@ -8,6 +8,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
+import android.util.Log;
 
 import com.thetechnoobs.typicaltowerdefence.R;
 import com.thetechnoobs.typicaltowerdefence.Tools;
@@ -15,56 +16,59 @@ import com.thetechnoobs.typicaltowerdefence.towers.PlotHandler;
 
 import java.util.ArrayList;
 
-public class MapTwo extends MapBase{
-    Bitmap mapTwoBitmap;
+public class MapTwo extends MapBase {
+
     Resources resources;
     int[] screenSize;
     Context context;
     Paint testPaint = new Paint();
     ArrayList<PlotHandler> plotHandlers;
 
-    public MapTwo(int[] screenSize, Resources resources, Context context){
+    public MapTwo(int[] screenSize, Resources resources, Context context) {
         this.screenSize = screenSize;
         this.resources = resources;
         this.context = context;
         testPaint.setColor(Color.RED);
-        plotHandlers = getMapTwoPlots(context);
 
         settupBitmap();
+        plotHandlers = getMapTwoPlots(context);
+        Log.v("testing", "width: " + mapBitmap.getWidth() + " Height: " + mapBitmap.getHeight());
     }
 
-    public  static ArrayList<PlotHandler> getMapTwoPlots(Context context){
+    public ArrayList<PlotHandler> getMapTwoPlots(Context context) {
         ArrayList<PlotHandler> plotHandlers = new ArrayList<>();
+        float plotWidth = mapBitmap.getWidth() / 5f;
+        float plotHeight = mapBitmap.getHeight() / 10f;
 
         RectF plot1Loc = new RectF(
-                Tools.convertDpToPixel(75),
-                Tools.convertDpToPixel(150),
-                Tools.convertDpToPixel(155),
-                Tools.convertDpToPixel(228));
+                mapBitmap.getWidth() / 4.5f,
+                mapBitmap.getHeight() / 5f,
+                mapBitmap.getWidth() / 4.5f + plotWidth,
+                mapBitmap.getHeight() / 5f + plotHeight);
 
         RectF plot2Loc = new RectF(
-                Tools.convertDpToPixel(75),
-                Tools.convertDpToPixel(335),
-                Tools.convertDpToPixel(155),
-                Tools.convertDpToPixel(420));
+                mapBitmap.getWidth() / 4.5f,
+                mapBitmap.getHeight() / 2.3f,
+                mapBitmap.getWidth() / 4.5f + plotWidth,
+                mapBitmap.getHeight() / 2.3f + plotHeight);
 
         RectF plot3Loc = new RectF(
-                Tools.convertDpToPixel(230),
-                Tools.convertDpToPixel(305),
-                Tools.convertDpToPixel(313),
-                Tools.convertDpToPixel(390));
+                mapBitmap.getWidth() / 1.54f,
+                mapBitmap.getHeight() / 2.3f,
+                mapBitmap.getWidth() / 1.54f + plotWidth,
+                mapBitmap.getHeight() / 2.3f + plotHeight);
 
         RectF plot4Loc = new RectF(
-                Tools.convertDpToPixel(230),
-                Tools.convertDpToPixel(475),
-                Tools.convertDpToPixel(313),
-                Tools.convertDpToPixel(555));
+                mapBitmap.getWidth() / 1.54f,
+                mapBitmap.getHeight() / 1.5f,
+                mapBitmap.getWidth() / 1.54f + plotWidth,
+                mapBitmap.getHeight() / 1.5f + plotHeight);
 
         RectF plot5Loc = new RectF(
-                Tools.convertDpToPixel(220),
-                Tools.convertDpToPixel(130),
-                Tools.convertDpToPixel(300),
-                Tools.convertDpToPixel(215));
+                mapBitmap.getWidth() / 1.6f,
+                mapBitmap.getHeight() / 4.5f,
+                mapBitmap.getWidth() / 1.6f + plotWidth,
+                mapBitmap.getHeight() / 4.5f + plotHeight);
 
         PlotHandler plotHandler1 = new PlotHandler(plot1Loc, context, 1);
         PlotHandler plotHandler2 = new PlotHandler(plot2Loc, context, 2);
@@ -82,44 +86,46 @@ public class MapTwo extends MapBase{
     }
 
     @Override
-    public ArrayList<RectF> enemyPathPoints(){
+    public ArrayList<RectF> enemyPathPoints() {
         ArrayList<RectF> pathMarkers = new ArrayList<>();
+        float pointWidth = mapBitmap.getWidth() / 120f;
+        float pointHeight = mapBitmap.getHeight() / 220f;
 
         RectF point1 = new RectF(
-                Tools.convertDpToPixel(45),
-                Tools.convertDpToPixel(700),
-                Tools.convertDpToPixel(50),
-                Tools.convertDpToPixel(705));
+                mapBitmap.getWidth() / 8f,
+                mapBitmap.getHeight() / 1.1f,
+                mapBitmap.getWidth() / 8f + pointWidth,
+                mapBitmap.getHeight() / 1.1f + pointHeight);
 
         RectF point2 = new RectF(
-                Tools.convertDpToPixel(50),
-                Tools.convertDpToPixel(600),
-                Tools.convertDpToPixel(55),
-                Tools.convertDpToPixel(605));
+                mapBitmap.getWidth() / 8.5f,
+                mapBitmap.getHeight() / 1.25f,
+                mapBitmap.getWidth() / 8.5f + pointWidth,
+                mapBitmap.getHeight() / 1.25f + pointHeight);
 
         RectF point3 = new RectF(
-                Tools.convertDpToPixel(190),
-                Tools.convertDpToPixel(540),
-                Tools.convertDpToPixel(195),
-                Tools.convertDpToPixel(545));
+                mapBitmap.getWidth() / 2f,
+                mapBitmap.getHeight() / 1.23f,
+                mapBitmap.getWidth() / 2f + pointWidth,
+                mapBitmap.getHeight() / 1.23f + pointHeight);
 
         RectF point4 = new RectF(
-                Tools.convertDpToPixel(190),
-                Tools.convertDpToPixel(280),
-                Tools.convertDpToPixel(195),
-                Tools.convertDpToPixel(285));
+                mapBitmap.getWidth() / 1.9f,
+                mapBitmap.getHeight() / 2f,
+                mapBitmap.getWidth() / 1.9f + pointWidth,
+                mapBitmap.getHeight() / 2f + pointHeight);
 
         RectF point5 = new RectF(
-                Tools.convertDpToPixel(185),
-                Tools.convertDpToPixel(120),
-                Tools.convertDpToPixel(190),
-                Tools.convertDpToPixel(125));
+                mapBitmap.getWidth() / 1.8f,
+                mapBitmap.getHeight() / 7f,
+                mapBitmap.getWidth() / 1.8f + pointWidth,
+                mapBitmap.getHeight() / 7f + pointHeight);
 
         RectF point6 = new RectF(
                 Tools.convertDpToPixel(-50),
-                Tools.convertDpToPixel(100),
+                mapBitmap.getHeight() / 7f,
                 Tools.convertDpToPixel(-55),
-                Tools.convertDpToPixel(105));
+                mapBitmap.getHeight() / 7f + pointHeight);
 
 
         pathMarkers.add(point1);
@@ -133,16 +139,16 @@ public class MapTwo extends MapBase{
     }
 
     private void settupBitmap() {
-        mapTwoBitmap = BitmapFactory.decodeResource(resources, R.drawable.map_two_no_plots);
-        mapTwoBitmap = Bitmap.createScaledBitmap(mapTwoBitmap, screenSize[0], screenSize[1], false);
+        mapBitmap = BitmapFactory.decodeResource(resources, R.drawable.map_two_no_plots);
+        mapBitmap = Bitmap.createScaledBitmap(mapBitmap, screenSize[0], screenSize[1], false);
     }
 
     @Override
     public void draw(Canvas canvas) {
-        canvas.drawBitmap(mapTwoBitmap, 0, 0, null);
+        canvas.drawBitmap(mapBitmap, 0, 0, null);
     }
 
-    public ArrayList<PlotHandler> getMapTwoPlots(){
+    public ArrayList<PlotHandler> getMapTwoPlots() {
         return plotHandlers;
     }
 }

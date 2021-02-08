@@ -19,7 +19,7 @@ public class EasyFastEnemy extends EnemyBase {
         this.mapPath = mapPath;
         this.screenSize = screenSize;
 
-        this.speed = Tools.convertDpToPixel(1.5f);
+        this.speed = Tools.convertDpToPixel(2f);
 
         debugPaint.setColor(Color.RED);
         debugPaint.setTextSize(Tools.convertDpToPixel(20));
@@ -49,6 +49,8 @@ public class EasyFastEnemy extends EnemyBase {
 
     @Override
     public void draw(Canvas canvas) {
+        super.draw(canvas);
+
         debugPaint.setColor(Color.RED);
         canvas.drawRect(getHitbox(), debugPaint);
 
@@ -58,10 +60,6 @@ public class EasyFastEnemy extends EnemyBase {
                 getHitbox().centerX(),
                 getHitbox().centerY(),
                 debugPaint);
-
-        for(int i = 0; i <mapPath.size(); i++){
-            canvas.drawRect(mapPath.get(i), debugPaint);
-        }
     }
 
     public RectF getHitbox() {

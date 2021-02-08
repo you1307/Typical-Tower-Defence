@@ -12,7 +12,6 @@ import java.util.Random;
 
 public class EasySlowEnemy extends EnemyBase {
     double distanceMoved = 0;
-    Paint debugPaint = new Paint();
 
     public EasySlowEnemy(int x, int y, int[] screenSize, ArrayList<RectF> mapPath) {
         setCurX(x);
@@ -29,6 +28,7 @@ public class EasySlowEnemy extends EnemyBase {
     @Override
     public void update() {
         super.update();
+
         if (timesHit > 9) {
             removeMe = true;
         }
@@ -50,6 +50,8 @@ public class EasySlowEnemy extends EnemyBase {
 
     @Override
     public void draw(Canvas canvas) {
+        super.draw(canvas);
+
             debugPaint.setColor(Color.RED);
             canvas.drawRect(getHitbox(), debugPaint);
 
@@ -59,10 +61,6 @@ public class EasySlowEnemy extends EnemyBase {
                     getHitbox().centerX(),
                     getHitbox().centerY(),
                     debugPaint);
-
-        for(int i = 0; i <mapPath.size(); i++){
-            canvas.drawRect(mapPath.get(i), debugPaint);
-        }
     }
 
     public RectF getHitbox() {

@@ -20,25 +20,9 @@ import com.thetechnoobs.typicaltowerdefence.towers.towerData.CannonTowerData;
 
 import java.util.ArrayList;
 
-public class CannonTower {
-
-    private final Context context;
-    Bitmap towerBitmap;
-    Resources resources;
-    RectF location;
-    Rect frame;
-    boolean shooting = false;
-    private boolean playingShootAnimation = false;
+public class CannonTower extends TowerBase{
     CannonTowerData cannonTowerData;
-    ArrayList<EnemyBase> targets = new ArrayList<>();
-    EnemyBase focusedTarget;
-    Paint testPaint = new Paint();
     ArrayList<CannonBall> cannonBalls = new ArrayList<>();
-    int[] screenSize;
-    int cannonSpriteWidth;
-    int cannonSpriteHeight;
-    int cannonSpriteFrameLocX = 1;
-    int cannonSpriteFrameLocY = 1;
 
     public CannonTower(Context context, RectF location, CannonTowerData cannonTowerData, int[] screenSize) {
         resources = context.getResources();
@@ -47,6 +31,8 @@ public class CannonTower {
         this.context = context;
         this.location = location;
 
+        this.SpriteFrameLocY = 1;
+
         testPaint.setColor(Color.GREEN);
         testPaint.setAlpha(60);
 
@@ -54,23 +40,13 @@ public class CannonTower {
         settupRangeHitbox();
     }
 
+    @Override
     public void draw(Canvas canvas){
-        int x = cannonSpriteWidth * cannonSpriteFrameLocX - cannonSpriteWidth;
-        int y = cannonSpriteHeight * cannonSpriteFrameLocY - cannonSpriteHeight;
-
-        frame = new Rect(x, y, x + cannonSpriteWidth, y + cannonSpriteHeight);
-
-        if(playingShootAnimation){
-            shootAnimation();
-        }
+        super.draw(canvas);
 
         for(CannonBall cannonBall: cannonBalls){
             cannonBall.draw(canvas);
         }
-
-        drawRangBox(canvas);
-
-        canvas.drawBitmap(towerBitmap, frame, location, null);
     }
 
     long timeLastShot = 0;
@@ -97,27 +73,15 @@ public class CannonTower {
 
     }
 
-    private void drawRangBox(Canvas canvas) {
-        float[] corners = new float[]{
-                Tools.convertDpToPixel(100), Tools.convertDpToPixel(100),      // Top left radius in px
-                Tools.convertDpToPixel(100), Tools.convertDpToPixel(100),      // Top right radius in px
-                Tools.convertDpToPixel(100), Tools.convertDpToPixel(100),      // Bottom right radius in px
-                Tools.convertDpToPixel(100), Tools.convertDpToPixel(100)       // Bottom left radius in px
-        };
-
-        final Path path = new Path();
-        path.addRoundRect(getRangeBox(), corners, Path.Direction.CW);
-        canvas.drawPath(path, testPaint);
-    }
-
-    private void shoot() {
+    @Override
+    public void shoot() {
         playingShootAnimation = true;
         CannonBall newBall = new CannonBall(
                 (int) location.centerX(),
-                (int) location.centerY(),
+                (int) location.top,
                 context,
                 focusedTarget,
-                screenSize);
+                screenSize, cannonTowerData.getDamage());
         cannonBalls.add(newBall);
     }
 
@@ -131,10 +95,10 @@ public class CannonTower {
         ticks++;
 
         if (ticks % 4 == 1) {
-            cannonSpriteFrameLocX++;
+            SpriteFrameLocX++;
 
-            if (cannonSpriteFrameLocX == 8) {
-                cannonSpriteFrameLocX = 1;
+            if (SpriteFrameLocX == 8) {
+                SpriteFrameLocX = 1;
                 playingShootAnimation = false;
                 ticks = 0;
             }
@@ -172,10 +136,11 @@ public class CannonTower {
 
     public RectF getRangeBox() {
         RectF tempR = new RectF(
-                (int) location.left - ((cannonTowerData.getRange() / 2) * 100),
-                (int) location.top - ((cannonTowerData.getRange() / 2) * 60),
-                (int) (location.left + location.width() + ((cannonTowerData.getRange() / 2) * 100)),
-                (int) (location.top + location.height() + ((cannonTowerData.getRange() / 2) * 110)));
+                (int) location.left - (cannonTowerData.getRange() * 2),
+                (int) location.top  - (cannonTowerData.getRange() * 2),
+                (int) (location.left + location.width() + (cannonTowerData.getRange() * 2)),
+                (int) (location.top + location.height() + (cannonTowerData.getRange() * 2)));
+
         return tempR;
     }
 
@@ -191,7 +156,7 @@ public class CannonTower {
     private void setupBitmap(){
         towerBitmap = BitmapFactory.decodeResource(resources, R.drawable.tower_sprites);
 
-        cannonSpriteWidth = towerBitmap.getWidth()/8;
-        cannonSpriteHeight = towerBitmap.getHeight()/4;
+        SpriteWidth = towerBitmap.getWidth()/8;
+        SpriteHeight = towerBitmap.getHeight()/4;
     }
 }

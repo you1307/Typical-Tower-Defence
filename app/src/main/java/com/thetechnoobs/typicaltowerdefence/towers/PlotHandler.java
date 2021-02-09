@@ -18,6 +18,7 @@ import com.thetechnoobs.typicaltowerdefence.towers.towerData.WizardTowerData;
 import java.util.ArrayList;
 
 public class PlotHandler {
+
     private final Context context;
     Bitmap availablePlotBitmap;
     RectF location;
@@ -26,9 +27,8 @@ public class PlotHandler {
     boolean available = true;
     Paint debugPaint = new Paint();
     int towerType = 0; //0 = none, 1 = arrow, 2 = cannon, 3 = troops, 4 = wizard
-    private boolean showTowerInfo = false;
 
-    public PlotHandler(RectF location, Context context, int arrayPos){
+    public PlotHandler(RectF location, Context context, int arrayPos) {
         this.location = location;
         this.arrayPos = arrayPos;
         this.context = context;
@@ -46,14 +46,14 @@ public class PlotHandler {
                 false);
     }
 
-    public void draw(Canvas canvas){
-        if(isAvailable()){
-            canvas.drawBitmap(availablePlotBitmap, (int) location.left,(int) location.top, null);
+    public void draw(Canvas canvas) {
+        if (isAvailable()) {
+            canvas.drawBitmap(availablePlotBitmap, (int) location.left, (int) location.top, null);
             //canvas.drawRect(location, debugPaint);
         }
 
-        if(!isAvailable()){
-            switch (towerType){
+        if (!isAvailable()) {
+            switch (towerType) {
                 case 0:
                     break;
                 case 1:
@@ -72,9 +72,9 @@ public class PlotHandler {
         }
     }
 
-    public void update(ArrayList<EnemyBase> targets){
-        if(!isAvailable()){
-            switch (towerType){
+    public void update(ArrayList<EnemyBase> targets) {
+        if (!isAvailable()) {
+            switch (towerType) {
                 case 0:
                     break;
                 case 1:
@@ -96,12 +96,12 @@ public class PlotHandler {
         }
     }
 
-    public RectF getLocation(){
+    public RectF getLocation() {
         return location;
     }
 
-    public void setTowerType(int type){
-        switch (type){
+    public void setTowerType(int type) {
+        switch (type) {
             case 1:
                 towerType = 1;
                 settupNewArrowTowerOnPlot();
@@ -127,6 +127,7 @@ public class PlotHandler {
 
     TroopsTower troopsTower;
     TroopsTowerData troopsTowerData;
+
     private void settupNewTroopsTowerOnPlot() {
         troopsTowerData = new TroopsTowerData(context);
         troopsTowerData.setDefalutValues();
@@ -135,6 +136,7 @@ public class PlotHandler {
 
     CannonTower cannonTower;
     CannonTowerData cannonTowerData;
+
     private void settupNewCannonTowerOnPlot() {
         cannonTowerData = new CannonTowerData(context);
         cannonTowerData.setDefalutValues();
@@ -144,6 +146,7 @@ public class PlotHandler {
 
     ArrowTower arrowTower;
     ArrowTowerData arrowTowerData;
+
     private void settupNewArrowTowerOnPlot() {
         arrowTowerData = new ArrowTowerData(context);
         arrowTowerData.setDefalutValues();
@@ -152,33 +155,34 @@ public class PlotHandler {
 
     WizardTower wizardTower;
     WizardTowerData wizardTowerData;
-    private void settupNewWizardTowerOnPlot(){
+
+    private void settupNewWizardTowerOnPlot() {
         wizardTowerData = new WizardTowerData(context);
         wizardTowerData.setDefalutValues();
         wizardTower = new WizardTower(context, location, wizardTowerData, screenSize);
     }
 
-    public int getOccupant(){
+    public int getOccupant() {
         return towerType;
     }
 
-    public void setUnavailable(){
+    public void setUnavailable() {
         available = false;
     }
 
-    public boolean isAvailable(){
+    public boolean isAvailable() {
         return available;
     }
 
     public Boolean checkTouch(RectF touchPoint) {
-        if(touchPoint.intersect(location)){
+        if (touchPoint.intersect(location)) {
             return true;
-        }else{
+        } else {
             return false;
         }
     }
 
-    public int getArrayPos(){
+    public int getArrayPos() {
         return arrayPos;
     }
 
@@ -190,15 +194,20 @@ public class PlotHandler {
         return cannonTowerData;
     }
 
-    public TroopsTowerData getTroopsData(){
+    public TroopsTowerData getTroopsData() {
         return troopsTowerData;
     }
 
-    public WizardTowerData getWizardData(){
+    public WizardTowerData getWizardData() {
         return wizardTowerData;
     }
 
     public void setScreenSize(int[] screenSize) {
         this.screenSize = screenSize;
+    }
+
+    public void removeTower() {
+        towerType = 0;
+        available = true;
     }
 }

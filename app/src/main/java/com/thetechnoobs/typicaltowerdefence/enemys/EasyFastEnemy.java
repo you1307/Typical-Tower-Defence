@@ -28,9 +28,6 @@ public class EasyFastEnemy extends EnemyBase {
     @Override
     public void update() {
         super.update();
-        if (timesHit > 9) {
-            removeMe = true;
-        }
 
         if(offScreen()){
             removeMe = true;
@@ -53,13 +50,6 @@ public class EasyFastEnemy extends EnemyBase {
 
         debugPaint.setColor(Color.RED);
         canvas.drawRect(getHitbox(), debugPaint);
-
-        debugPaint.setColor(Color.BLACK);
-        canvas.drawText(
-                String.valueOf(timesHit),
-                getHitbox().centerX(),
-                getHitbox().centerY(),
-                debugPaint);
     }
 
     public RectF getHitbox() {

@@ -10,31 +10,22 @@ import android.graphics.RectF;
 
 import com.thetechnoobs.typicaltowerdefence.R;
 import com.thetechnoobs.typicaltowerdefence.Tools;
-import com.thetechnoobs.typicaltowerdefence.enemys.EasySlowEnemy;
 import com.thetechnoobs.typicaltowerdefence.enemys.EnemyBase;
 
-public class WizardOrb {
-    Bitmap orb;
-    int curX, curY;
-    float xVelocity, yVelocity;
-    Context context;
-    EnemyBase target;
-    int[] screenSize;
-    int speed = 8;
-    private boolean removeMe = false;
-    Paint testPaint = new Paint();
+public class WizardOrb extends ProjectileBase{
 
-
-    public WizardOrb(int x, int y, Context context, EnemyBase target, int[] screenSize) {
+    public WizardOrb(int x, int y, Context context, EnemyBase target, int[] screenSize, int damage) {
         curX = x;
         curY = y;
         this.screenSize = screenSize;
         this.target = target;
         this.context = context;
+        this.damage = damage;
+        this.speed = Tools.convertDpToPixel(8f);
 
-        orb = BitmapFactory.decodeResource(context.getResources(), R.drawable.orb);
-        orb = Bitmap.createScaledBitmap(
-                orb,
+        projectileBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.orb);
+        projectileBitmap = Bitmap.createScaledBitmap(
+                projectileBitmap,
                 (int) Tools.convertDpToPixel(10),
                 (int) Tools.convertDpToPixel(20),
                 false);
@@ -44,7 +35,7 @@ public class WizardOrb {
     }
 
     public void draw(Canvas canvas) {
-        canvas.drawBitmap(orb, getCurX(), getCurY(), null);
+        canvas.drawBitmap(projectileBitmap, getCurX(), getCurY(), null);
     }
     double ticks = 0;
     public void update() {
@@ -59,7 +50,7 @@ public class WizardOrb {
 
     public void checkCollision() {
         if (getHitbox().intersect(target.getHitbox())) {
-            target.addTimeHit();
+            target.addDamage(damage);
             removeMe = true;
         }
     }
@@ -68,8 +59,8 @@ public class WizardOrb {
         return new RectF(
                 getCurX(),
                 getCurY(),
-                getCurX() + orb.getWidth(),
-                getCurY() + orb.getHeight());
+                getCurX() + projectileBitmap.getWidth(),
+                getCurY() + projectileBitmap.getHeight());
     }
 
     public boolean shouldRemove() {
@@ -110,7 +101,7 @@ public class WizardOrb {
 
     private void orientateOrb() {
         double temp = Math.atan2(yVelocity, xVelocity);
-        orb = rotateBitmap(orb, (float) (temp));
+        projectileBitmap = rotateBitmap(projectileBitmap, (float) (temp));
     }
 
     private Bitmap rotateBitmap(Bitmap original, float degrees) {

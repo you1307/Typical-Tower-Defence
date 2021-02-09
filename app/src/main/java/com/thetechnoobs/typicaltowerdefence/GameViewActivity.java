@@ -41,6 +41,7 @@ public class GameViewActivity extends AppCompatActivity {
         super.onPause();
         gameView.cleanUp();
         gameView.stopRunning();
+        finish();
     }
 
     @Override

@@ -1,12 +1,9 @@
 package com.thetechnoobs.typicaltowerdefence.towers;
 
 import android.content.Context;
-import android.content.res.Resources;
-import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Rect;
 import android.graphics.RectF;
@@ -14,33 +11,17 @@ import android.util.Log;
 
 import com.thetechnoobs.typicaltowerdefence.R;
 import com.thetechnoobs.typicaltowerdefence.Tools;
-import com.thetechnoobs.typicaltowerdefence.enemys.EasySlowEnemy;
 import com.thetechnoobs.typicaltowerdefence.enemys.EnemyBase;
 import com.thetechnoobs.typicaltowerdefence.projectials.WizardOrb;
 import com.thetechnoobs.typicaltowerdefence.towers.towerData.WizardTowerData;
 
 import java.util.ArrayList;
 
-public class WizardTower {
+public class WizardTower extends TowerBase {
 
-    Bitmap towerBitmap;
-    Resources resources;
-    RectF location;
-    Rect frame;
-    Context context;
-    boolean shooting = false;
-    Paint testPaint = new Paint();
     WizardTowerData wizardTowerData;
     ArrayList<EnemyBase> targets = new ArrayList<>();
     ArrayList<WizardOrb> orbs = new ArrayList<>();
-    EnemyBase focusedTarget;
-    int[] screenSize;
-    int wizardSpriteWidth;
-    int wizardSpriteHeight;
-    int wizardSpriteFrameLocX = 1;
-    int wizardSpriteFrameLocY = 4;
-    private int ticks = 0;
-    private boolean playingShootAnimation = false;
 
     public WizardTower(Context context, RectF location, WizardTowerData wizardTowerData, int[] screenSize) {
         resources = context.getResources();
@@ -49,6 +30,8 @@ public class WizardTower {
         this.location = location;
         this.wizardTowerData = wizardTowerData;
 
+        this.SpriteFrameLocY = 4;
+
         testPaint.setColor(Color.GREEN);
         testPaint.setAlpha(60);
 
@@ -56,36 +39,13 @@ public class WizardTower {
         settupRangeHitbox();
     }
 
+    @Override
     public void draw(Canvas canvas) {
-        int x = wizardSpriteWidth * wizardSpriteFrameLocX - wizardSpriteWidth;
-        int y = wizardSpriteHeight * wizardSpriteFrameLocY - wizardSpriteHeight;
-
-        frame = new Rect(x, y, x + wizardSpriteWidth, y + wizardSpriteHeight);
-
-        if (playingShootAnimation) {
-            shootAnimation();
-        }
+        super.draw(canvas);
 
         for (WizardOrb orb : orbs) {
             orb.draw(canvas);
         }
-
-        drawRangBox(canvas);
-
-        canvas.drawBitmap(towerBitmap, frame, location, null);
-    }
-
-    private void drawRangBox(Canvas canvas) {
-        float[] corners = new float[]{
-                Tools.convertDpToPixel(100), Tools.convertDpToPixel(100),      // Top left radius in px
-                Tools.convertDpToPixel(100), Tools.convertDpToPixel(100),      // Top right radius in px
-                Tools.convertDpToPixel(100), Tools.convertDpToPixel(100),      // Bottom right radius in px
-                Tools.convertDpToPixel(100), Tools.convertDpToPixel(100)       // Bottom left radius in px
-        };
-
-        final Path path = new Path();
-        path.addRoundRect(getRangeBox(), corners, Path.Direction.CW);
-        canvas.drawPath(path, testPaint);
     }
 
     long timeLastShot = 0;
@@ -113,36 +73,38 @@ public class WizardTower {
 
     }
 
-    private void shoot() {
+    @Override
+    public void shoot() {
         playingShootAnimation = true;
         WizardOrb newOrb = new WizardOrb(
                 (int) location.centerX(),
-                (int) location.centerY(),
+                (int) location.top,
                 context,
                 focusedTarget,
-                screenSize);
+                screenSize, wizardTowerData.getDamage());
         orbs.add(newOrb);
     }
 
 
     boolean hasTarget = false;
+
     private void updateTarget() {
         Log.v("testing", "size: " + targets.size());
 
         for (EnemyBase enemy : targets) {
             focusedTarget = enemy;
 
-            if(focusedTarget != null && focusedTarget.getHitbox().intersect(getRangeBox())){
+            if (focusedTarget != null && focusedTarget.getHitbox().intersect(getRangeBox())) {
                 hasTarget = true;
                 return;
-            }else if(focusedTarget != null && focusedTarget.getDistanceMoved() < enemy.getDistanceMoved() && enemy.getHitbox().intersect(getRangeBox())){
+            } else if (focusedTarget != null && focusedTarget.getDistanceMoved() < enemy.getDistanceMoved() && enemy.getHitbox().intersect(getRangeBox())) {
                 focusedTarget = enemy;
                 hasTarget = true;
                 return;
-            }else if (focusedTarget.shouldRemove()){
+            } else if (focusedTarget.shouldRemove()) {
                 hasTarget = false;
                 focusedTarget = null;
-            }else{
+            } else {
                 hasTarget = false;
                 focusedTarget = null;
             }
@@ -158,27 +120,30 @@ public class WizardTower {
         this.targets = targets;
     }
 
+    long ticks = 0;
+
+    @Override
     public void shootAnimation() {
         ticks++;
 
         if (ticks % 4 == 1) {
-            wizardSpriteFrameLocX++;
+            SpriteFrameLocX++;
 
-            if (wizardSpriteFrameLocX == 8) {
-                wizardSpriteFrameLocX = 1;
+            if (SpriteFrameLocX == 8) {
+                SpriteFrameLocX = 1;
                 playingShootAnimation = false;
                 ticks = 0;
             }
         }
     }
 
+    @Override
     public RectF getRangeBox() {
         RectF tempR = new RectF(
-                (int) location.left - ((wizardTowerData.getRange() / 2) * 70),
-                (int) location.top - ((wizardTowerData.getRange() / 2) * 70),
-                (int) (location.left + location.width() + ((wizardTowerData.getRange() / 2) * 70)),
-                (int) (location.top + location.height() + ((wizardTowerData.getRange() / 2) * 70)));
-
+                (int) location.left - (wizardTowerData.getRange() * 2),
+                (int) location.top - (wizardTowerData.getRange() * 2),
+                (int) (location.left + location.width() + (wizardTowerData.getRange() * 2)),
+                (int) (location.top + location.height() + (wizardTowerData.getRange() * 2)));
 
         return tempR;
     }
@@ -194,7 +159,7 @@ public class WizardTower {
     private void setupBitmap() {
         towerBitmap = BitmapFactory.decodeResource(resources, R.drawable.tower_sprites);
 
-        wizardSpriteWidth = towerBitmap.getWidth() / 8;
-        wizardSpriteHeight = towerBitmap.getHeight() / 4;
+        SpriteWidth = towerBitmap.getWidth() / 8;
+        SpriteHeight = towerBitmap.getHeight() / 4;
     }
 }

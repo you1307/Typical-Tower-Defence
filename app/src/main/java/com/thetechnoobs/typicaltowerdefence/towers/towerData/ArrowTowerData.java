@@ -7,14 +7,15 @@ import java.util.Random;
 
 public class ArrowTowerData {
     Context context;
-    int range, damage, price;
+    int damage, price;
+    float range;
     float fireRate;
 
     public ArrowTowerData(Context context) {
         this.context = context;
     }
 
-    public int getRange() {
+    public float getRange() {
         return range;
     }
 

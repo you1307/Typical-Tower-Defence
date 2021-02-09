@@ -86,7 +86,7 @@ public class GameView extends SurfaceView implements Runnable {
     }
 
     private void tick() {
-        if(targets.size() < 4){
+        if(targets.size() < 10){
             addTestEnemy();
         }
 
@@ -163,6 +163,15 @@ public class GameView extends SurfaceView implements Runnable {
             return;
         }
 
+        if(infoUpgradePage.shouldShow() && infoUpgradePage.removeBtnPushed(touchPoint)){
+            for(PlotHandler plotHandler: plotHandlers){
+                if(plotInFocus == plotHandler.getArrayPos()){
+                    plotHandler.removeTower();
+                }
+            }
+            infoUpgradePage.setShowMe(false);
+        }
+
         if (towerSelectionWheel.shouldShow()) {
             switch (towerSelectionWheel.checkPress(touchPoint)) {
                 case 0:
@@ -182,7 +191,6 @@ public class GameView extends SurfaceView implements Runnable {
                 plotTouched = true;
 
                 if (plotHandler.isAvailable()) {
-                    plotInFocus = plotHandler.getArrayPos();
                     towerSelectionWheel.setLocation(plotHandler.getLocation(), infoBuyPage);
                     infoBuyPage.setShowMe(false);
                     infoUpgradePage.setShowMe(false);
@@ -191,6 +199,7 @@ public class GameView extends SurfaceView implements Runnable {
                     infoUpgradePage.setData(plotHandler);
                     infoUpgradePage.setShowMe(true);
                 }
+                plotInFocus = plotHandler.getArrayPos();
             }
         }
 
@@ -205,7 +214,7 @@ public class GameView extends SurfaceView implements Runnable {
     public void addTestEnemy(){
         long curTime = System.currentTimeMillis();
 
-        if(curTime - lastShotTime >= 1000){
+        if(curTime - lastShotTime >= 500){
             lastShotTime = curTime;
             EasySlowEnemy easySlowEnemy = new EasySlowEnemy(
                     (int) Tools.convertDpToPixel(165),
@@ -219,7 +228,6 @@ public class GameView extends SurfaceView implements Runnable {
 
 
             targets.add(easySlowEnemy);
-            targets.add(easyFastEnemy);
         }
     }
 

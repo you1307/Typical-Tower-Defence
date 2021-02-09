@@ -9,34 +9,28 @@ import android.graphics.Paint;
 import android.graphics.RectF;
 
 import com.thetechnoobs.typicaltowerdefence.R;
-import com.thetechnoobs.typicaltowerdefence.enemys.EasySlowEnemy;
+import com.thetechnoobs.typicaltowerdefence.Tools;
 import com.thetechnoobs.typicaltowerdefence.enemys.EnemyBase;
 
-public class Arrow {
-    Bitmap arrow;
-    int curX, curY;
-    float xVelocity, yVelocity;
-    Context context;
-    EnemyBase target;
-    int[] screenSize;
-    int speed = 15;
-    private boolean removeMe = false;
-    Paint testPaint = new Paint();
+public class Arrow extends ProjectileBase{
 
-    public Arrow(int x, int y, Context context, EnemyBase target, int[] screenSize) {
+
+    public Arrow(int x, int y, Context context, EnemyBase target, int[] screenSize, int damage) {
         curX = x;
         curY = y;
         this.screenSize = screenSize;
         this.target = target;
         this.context = context;
+        this.damage = damage;
+        this.speed = Tools.convertDpToPixel(15f);
 
-        arrow = BitmapFactory.decodeResource(context.getResources(), R.drawable.arrow);
+        projectileBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.arrow);
         calculateVolocity();
         orientateArrow();
     }
 
     public void draw(Canvas canvas) {
-        canvas.drawBitmap(arrow, getCurX(), getCurY(), null);
+        canvas.drawBitmap(projectileBitmap, getCurX(), getCurY(), null);
     }
 
     public void update() {
@@ -48,7 +42,7 @@ public class Arrow {
 
     public void checkCollision() {
         if (getHitbox().intersect(target.getHitbox())) {
-            target.addTimeHit();
+            target.addDamage(damage);
             removeMe = true;
         }
     }
@@ -57,8 +51,8 @@ public class Arrow {
         return new RectF(
                 getCurX(),
                 getCurY(),
-                getCurX() + arrow.getWidth(),
-                getCurY() + arrow.getHeight());
+                getCurX() + projectileBitmap.getWidth(),
+                getCurY() + projectileBitmap.getHeight());
     }
 
     public boolean shouldRemove() {
@@ -99,7 +93,7 @@ public class Arrow {
 
     private void orientateArrow() {
         double temp = Math.atan2(yVelocity, xVelocity);
-        arrow = rotateBitmap(arrow, (float) (temp * 62));
+        projectileBitmap = rotateBitmap(projectileBitmap, (float) (temp * 62));
     }
 
     private Bitmap rotateBitmap(Bitmap original, float degrees) {

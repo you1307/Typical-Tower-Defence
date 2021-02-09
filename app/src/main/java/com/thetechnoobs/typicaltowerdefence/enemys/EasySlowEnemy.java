@@ -29,11 +29,7 @@ public class EasySlowEnemy extends EnemyBase {
     public void update() {
         super.update();
 
-        if (timesHit > 9) {
-            removeMe = true;
-        }
-
-        if(offScreen()){
+        if (shouldRemove()) {
             removeMe = true;
         }
     }
@@ -44,27 +40,15 @@ public class EasySlowEnemy extends EnemyBase {
     }
 
     @Override
-    public boolean shouldRemove() {
-        return removeMe;
-    }
-
-    @Override
     public void draw(Canvas canvas) {
         super.draw(canvas);
 
             debugPaint.setColor(Color.RED);
             canvas.drawRect(getHitbox(), debugPaint);
-
-            debugPaint.setColor(Color.BLACK);
-            canvas.drawText(
-                    String.valueOf(timesHit),
-                    getHitbox().centerX(),
-                    getHitbox().centerY(),
-                    debugPaint);
     }
 
     public RectF getHitbox() {
-        return new RectF(getCurX(), getCurY(), getCurX() + 40, getCurY() + 40);
+        return new RectF(getCurX(), getCurY(), getCurX() + Tools.convertDpToPixel(10), getCurY() + Tools.convertDpToPixel(10));
     }
 }
 

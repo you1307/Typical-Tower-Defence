@@ -11,32 +11,23 @@ import android.graphics.RectF;
 import com.thetechnoobs.typicaltowerdefence.R;
 import com.thetechnoobs.typicaltowerdefence.enemys.EnemyBase;
 
-public class CannonBall {
+public class CannonBall extends ProjectileBase{
 
-    Bitmap cannonBallBitmap;
-    int curX, curY;
-    float xVelocity, yVelocity;
-    Context context;
-    EnemyBase target;
-    int[] screenSize;
-    int speed = 15;
-    private boolean removeMe = false;
-    Paint testPaint = new Paint();
-
-    public CannonBall(int x, int y, Context context, EnemyBase target, int[] screenSize) {
+    public CannonBall(int x, int y, Context context, EnemyBase target, int[] screenSize, int damage) {
         curX = x;
         curY = y;
         this.screenSize = screenSize;
         this.target = target;
         this.context = context;
+        this.damage = damage;
 
-        cannonBallBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.cannon_ball);
+        projectileBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.cannon_ball);
         calculateVolocity();
         orientateBall();
     }
 
     public void draw(Canvas canvas) {
-        canvas.drawBitmap(cannonBallBitmap, getCurX(), getCurY(), null);
+        canvas.drawBitmap(projectileBitmap, getCurX(), getCurY(), null);
     }
 
     public void update() {
@@ -48,7 +39,7 @@ public class CannonBall {
 
     public void checkCollision() {
         if (getHitbox().intersect(target.getHitbox())) {
-            target.addTimeHit();
+            target.addDamage(damage);
             removeMe = true;
         }
     }
@@ -57,8 +48,8 @@ public class CannonBall {
         return new RectF(
                 getCurX(),
                 getCurY(),
-                getCurX() + cannonBallBitmap.getWidth(),
-                getCurY() + cannonBallBitmap.getHeight());
+                getCurX() + projectileBitmap.getWidth(),
+                getCurY() + projectileBitmap.getHeight());
     }
 
     public boolean shouldRemove() {
@@ -99,7 +90,7 @@ public class CannonBall {
 
     private void orientateBall() {
         double temp = Math.atan2(yVelocity, xVelocity);
-        cannonBallBitmap = rotateBitmap(cannonBallBitmap, (float) (temp * 120));
+        projectileBitmap = rotateBitmap(projectileBitmap, (float) (temp * 120));
     }
 
     private Bitmap rotateBitmap(Bitmap original, float degrees) {

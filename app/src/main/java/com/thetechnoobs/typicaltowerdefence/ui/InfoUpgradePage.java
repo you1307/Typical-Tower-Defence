@@ -19,15 +19,15 @@ import com.thetechnoobs.typicaltowerdefence.towers.towerData.TroopsTowerData;
 import com.thetechnoobs.typicaltowerdefence.towers.towerData.WizardTowerData;
 
 public class InfoUpgradePage {
-    Bitmap infoPageBitmap, upgradeBtnBitmap, upgradeBtnDisabled;
+    Bitmap infoPageBitmap, upgradeBtnBitmap, upgradeBtnDisabled, removeBTNBitmap;
     Resources resources;
     Paint textPaint = new Paint();
     int loadedTower; //1 = arrow, 2 = cannon, 3 = troops, 4 = wizard
     boolean showMe = false;
-    float fireRateTXT;
-    int damageTXT, rangeTXT, randomNum;
+    float fireRateTXT, rangeTXT;
+    int damageTXT, randomNum;
     int[] infoPageLocation;//{x, y};
-    RectF upgradeBTN;
+    RectF upgradeBTN, removeBTN;
 
     public InfoUpgradePage(Context context) {
         this.resources = context.getResources();
@@ -44,9 +44,15 @@ public class InfoUpgradePage {
 
     private void iniButtonPos() {
         upgradeBTN = new RectF(
-                infoPageLocation[0] + Tools.convertDpToPixel(63),
+                infoPageLocation[0] + Tools.convertDpToPixel(20),
                 infoPageLocation[1] + Tools.convertDpToPixel(200),
-                infoPageLocation[0] + Tools.convertDpToPixel(140),
+                infoPageLocation[0] + Tools.convertDpToPixel(100),
+                infoPageLocation[1] + Tools.convertDpToPixel(235));
+
+        removeBTN = new RectF(
+                infoPageLocation[0] + Tools.convertDpToPixel(110),
+                infoPageLocation[1] + Tools.convertDpToPixel(200),
+                infoPageLocation[0] + Tools.convertDpToPixel(190),
                 infoPageLocation[1] + Tools.convertDpToPixel(235));
     }
 
@@ -63,6 +69,11 @@ public class InfoUpgradePage {
                 (int) Tools.convertDpToPixel(35),
                 false);
 
+        removeBTNBitmap = BitmapFactory.decodeResource(resources, R.drawable.remove_btn);
+        removeBTNBitmap = Bitmap.createScaledBitmap(removeBTNBitmap,
+                (int) Tools.convertDpToPixel(80),
+                (int) Tools.convertDpToPixel(35),
+                false);
         upgradeBtnDisabled = BitmapFactory.decodeResource(resources, R.drawable.upgrade_button_disabled);
         upgradeBtnDisabled = Bitmap.createScaledBitmap(upgradeBtnDisabled,
                 (int) Tools.convertDpToPixel(80),
@@ -77,13 +88,19 @@ public class InfoUpgradePage {
     public void draw(Canvas canvas) {
         canvas.drawBitmap(infoPageBitmap, infoPageLocation[0], infoPageLocation[1], null);
 
-        canvas.drawRect(upgradeBTN, textPaint);
-
         canvas.drawBitmap(upgradeBtnBitmap,
-                infoPageLocation[0] + Tools.convertDpToPixel(60),
+                infoPageLocation[0] + Tools.convertDpToPixel(20),
+                infoPageLocation[1] + Tools.convertDpToPixel(200),
+                null);
+
+        canvas.drawBitmap(removeBTNBitmap,
+                infoPageLocation[0] + Tools.convertDpToPixel(105),
                 infoPageLocation[1] + Tools.convertDpToPixel(200),
                 null);
         drawData(canvas);
+
+        //canvas.drawRect(upgradeBTN, textPaint);
+        //canvas.drawRect(removeBTN, textPaint);
     }
 
     public boolean shouldShow(){
@@ -175,6 +192,14 @@ public class InfoUpgradePage {
             case 4:
                 loadWizardTowerData(plotHandler.getWizardData());
                 break;
+        }
+    }
+
+    public boolean removeBtnPushed(RectF touchPoint) {
+        if(touchPoint.intersect(removeBTN)){
+            return true;
+        }else{
+            return false;
         }
     }
 }

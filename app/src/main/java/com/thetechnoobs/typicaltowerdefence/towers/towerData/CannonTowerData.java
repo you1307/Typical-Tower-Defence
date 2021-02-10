@@ -3,6 +3,8 @@ package com.thetechnoobs.typicaltowerdefence.towers.towerData;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import com.thetechnoobs.typicaltowerdefence.Tools;
+
 import java.util.Random;
 
 public class CannonTowerData {
@@ -42,5 +44,12 @@ public class CannonTowerData {
         damage = DefaultValues.cannonDamage;
         fireRate = DefaultValues.cannonFireRate;
         price = DefaultValues.cannonPrice;
+    }
+
+    public void upgrade() {
+        damage += 1;
+        range += Tools.convertDpToPixel(2);
+        fireRate -= 50f;
+        price += 30;
     }
 }

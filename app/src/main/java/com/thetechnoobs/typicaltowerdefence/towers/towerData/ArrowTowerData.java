@@ -1,11 +1,13 @@
 package com.thetechnoobs.typicaltowerdefence.towers.towerData;
 
 import android.content.Context;
-import android.content.SharedPreferences;
+
+import com.thetechnoobs.typicaltowerdefence.Tools;
 
 import java.util.Random;
 
 public class ArrowTowerData {
+
     Context context;
     int damage, price;
     float range;
@@ -19,7 +21,7 @@ public class ArrowTowerData {
         return range;
     }
 
-    public int getPrice(){
+    public int getPrice() {
         return price;
     }
 
@@ -31,7 +33,7 @@ public class ArrowTowerData {
         return fireRate;
     }
 
-    public int getRandomNum(){
+    public int getRandomNum() {
         return randomNum;
     }
 
@@ -46,6 +48,9 @@ public class ArrowTowerData {
     }
 
     public void upgrade() {
-        
+        damage += 1;
+        range += Tools.convertDpToPixel(2);
+        fireRate -= 50f;
+        price += 30;
     }
 }

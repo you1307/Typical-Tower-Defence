@@ -249,8 +249,8 @@ public class PlotHandler {
                 }
                 break;
             case 2:
-                if (cannonTower != null) {
-                    cannonTower.upgrade();
+                if (cannonTowerData != null) {
+                    cannonTowerData.upgrade();
                 }
                 break;
             case 3:
@@ -259,8 +259,8 @@ public class PlotHandler {
                 }
                 break;
             case 4:
-                if (wizardTower != null) {
-                    wizardTower.upgrade();
+                if (wizardTowerData != null) {
+                    wizardTowerData.upgrade();
                 }
                 break;
         }

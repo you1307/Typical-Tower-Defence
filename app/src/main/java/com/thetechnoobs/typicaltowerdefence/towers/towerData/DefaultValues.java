@@ -5,7 +5,7 @@ import com.thetechnoobs.typicaltowerdefence.Tools;
 public class DefaultValues {
     public static final int arrowDamage = 1;
     public static final float arrowRange = Tools.convertDpToPixel(100);
-    public static final float arrowFireRate = 1.0f;
+    public static final float arrowFireRate = 1000f;
     public static final int arrowPrice = 50;
 
 

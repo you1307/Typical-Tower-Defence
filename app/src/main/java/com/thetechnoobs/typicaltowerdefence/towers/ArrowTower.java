@@ -45,13 +45,13 @@ public class ArrowTower extends TowerBase {
     }
 
     long timeLastShot = 0;
-
     public void update() {
         focusedTarget = updateTargetFirstInLine(arrowTowerData.getRange());
 
         if (hasTarget && !focusedTarget.shouldRemove()) {
             long newShotTime = System.currentTimeMillis();
-            if (newShotTime - timeLastShot >= 500) {
+            double delayTime = arrowTowerData.getFireRate();
+            if (newShotTime - timeLastShot >= delayTime) {
                 shoot();
                 timeLastShot = newShotTime;
             }

@@ -3,6 +3,8 @@ package com.thetechnoobs.typicaltowerdefence.towers.towerData;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import com.thetechnoobs.typicaltowerdefence.Tools;
+
 import java.util.Random;
 
 public class WizardTowerData {
@@ -44,5 +46,12 @@ public class WizardTowerData {
         damage = DefaultValues.wizardDamage;
         fireRate = DefaultValues.wizardFireRate;
         price = DefaultValues.wizardPrice;
+    }
+
+    public void upgrade() {
+        damage += 1;
+        range += Tools.convertDpToPixel(2);
+        fireRate -= 50f;
+        price += 30;
     }
 }

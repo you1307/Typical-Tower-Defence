@@ -202,4 +202,8 @@ public class InfoUpgradePage {
             return false;
         }
     }
+
+    public void update() {
+
+    }
 }

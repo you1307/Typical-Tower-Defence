@@ -103,6 +103,7 @@ public class GameView extends SurfaceView implements Runnable {
 
             if(infoUpgradePage.shouldShow() && plotInFocus == plotHandler.getPlotID()){
                 plotHandler.setShowRange(true);
+                infoUpgradePage.update();
             }else{
                 plotHandler.setShowRange(false);
             }
@@ -162,6 +163,7 @@ public class GameView extends SurfaceView implements Runnable {
     private void presedDown(RectF touchPoint) {
         boolean plotTouched = false;
 
+        //check if buy button is pushed from buy pannel
         if (infoBuyPage.shouldShow() && infoBuyPage.buyButtonPushed(touchPoint)) {
             plotInPos(plotInFocus).setTowerType(infoBuyPage.getLoadedTower());
             infoBuyPage.setShowMe(false);
@@ -169,6 +171,7 @@ public class GameView extends SurfaceView implements Runnable {
             return;
         }
 
+        //check if remove button was pushed while info upgrade page is bing shown
         if(infoUpgradePage.shouldShow() && infoUpgradePage.removeBtnPushed(touchPoint)){
             for(PlotHandler plotHandler: plotHandlers){
                 if(plotInFocus == plotHandler.getPlotID()){
@@ -178,13 +181,16 @@ public class GameView extends SurfaceView implements Runnable {
             infoUpgradePage.setShowMe(false);
         }
 
+        //check if upgrade button is pushed while info upgrade page is showing
         if(infoUpgradePage.shouldShow() && infoUpgradePage.upgradeButtonPushed(touchPoint)){
             for(PlotHandler plotHandler: plotHandlers){
                 if(plotInFocus == plotHandler.getPlotID()){
                     plotHandler.upgradeTowerOneLevel();
+                    infoUpgradePage.setData(plotHandler);
+                    infoUpgradePage.setShowMe(true);
+                    return;
                 }
             }
-            infoUpgradePage.setShowMe(false);
         }
 
         if (towerSelectionWheel.shouldShow()) {

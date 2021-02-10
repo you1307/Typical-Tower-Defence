@@ -46,9 +46,11 @@ public class ArrowTower extends TowerBase {
 
     long timeLastShot = 0;
     public void update() {
+        super.update();
+
         focusedTarget = updateTargetFirstInLine(arrowTowerData.getRange());
 
-        if (hasTarget && !focusedTarget.shouldRemove()) {
+        if (hasTarget) {
             long newShotTime = System.currentTimeMillis();
             double delayTime = arrowTowerData.getFireRate();
             if (newShotTime - timeLastShot >= delayTime) {
@@ -86,6 +88,10 @@ public class ArrowTower extends TowerBase {
 
     @Override
     protected void shoot() {
+        if(focusedTarget == null){
+            return;
+        }
+
         playingShootAnimation = true;
         Arrow newArrow = new Arrow(
                 (int) location.centerX(),

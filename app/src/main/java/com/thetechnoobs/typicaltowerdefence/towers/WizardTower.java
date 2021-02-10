@@ -50,9 +50,11 @@ public class WizardTower extends TowerBase {
     long timeLastShot = 0;
 
     public void update() {
+        super.update();
+
         focusedTarget = updateTargetFirstInLine(wizardTowerData.getRange());
 
-        if (hasTarget && !focusedTarget.shouldRemove()) {
+        if (hasTarget) {
             long newShotTime = System.currentTimeMillis();
             if (newShotTime - timeLastShot >= 500) {
                 shoot();
@@ -74,6 +76,10 @@ public class WizardTower extends TowerBase {
 
     @Override
     public void shoot() {
+        if(focusedTarget == null){
+            return;
+        }
+
         playingShootAnimation = true;
         WizardOrb newOrb = new WizardOrb(
                 (int) location.centerX(),

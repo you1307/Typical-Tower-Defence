@@ -92,6 +92,9 @@ public abstract class TowerBase {
             showRange = shouldShow;
     }
 
+    public void update(){
+    }
+
     public double getDistanceToEnemy(float[] curXY, float[] targetXY) {
         double ac = Math.abs(targetXY[1] - curXY[1]);
         double cb = Math.abs(targetXY[0] - curXY[0]);

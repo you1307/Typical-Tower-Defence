@@ -48,9 +48,11 @@ public class CannonTower extends TowerBase {
     long timeLastShot = 0;
 
     public void update() {
+        super.update();
+
         focusedTarget = updateTargetFirstInLine(cannonTowerData.getRange());
 
-        if (hasTarget && !focusedTarget.shouldRemove()) {
+        if (hasTarget) {
             long newShotTime = System.currentTimeMillis();
             if (newShotTime - timeLastShot >= 500) {
                 shoot();
@@ -72,6 +74,10 @@ public class CannonTower extends TowerBase {
 
     @Override
     public void shoot() {
+        if(focusedTarget == null){
+            return;
+        }
+
         playingShootAnimation = true;
         CannonBall newBall = new CannonBall(
                 (int) location.centerX(),

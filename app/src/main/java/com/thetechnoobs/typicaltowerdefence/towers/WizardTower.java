@@ -20,7 +20,6 @@ import java.util.ArrayList;
 public class WizardTower extends TowerBase {
 
     WizardTowerData wizardTowerData;
-    ArrayList<EnemyBase> targets = new ArrayList<>();
     ArrayList<WizardOrb> orbs = new ArrayList<>();
 
     public WizardTower(Context context, RectF location, WizardTowerData wizardTowerData, int[] screenSize) {
@@ -51,7 +50,7 @@ public class WizardTower extends TowerBase {
     long timeLastShot = 0;
 
     public void update() {
-        updateTarget();
+        focusedTarget = updateTargetFirstInLine(wizardTowerData.getRange());
 
         if (hasTarget && !focusedTarget.shouldRemove()) {
             long newShotTime = System.currentTimeMillis();
@@ -85,37 +84,6 @@ public class WizardTower extends TowerBase {
         orbs.add(newOrb);
     }
 
-
-    boolean hasTarget = false;
-
-    private void updateTarget() {
-        Log.v("testing", "size: " + targets.size());
-
-        for (EnemyBase enemy : targets) {
-            focusedTarget = enemy;
-
-            if (focusedTarget != null && focusedTarget.getHitbox().intersect(getRangeBox())) {
-                hasTarget = true;
-                return;
-            } else if (focusedTarget != null && focusedTarget.getDistanceMoved() < enemy.getDistanceMoved() && enemy.getHitbox().intersect(getRangeBox())) {
-                focusedTarget = enemy;
-                hasTarget = true;
-                return;
-            } else if (focusedTarget.shouldRemove()) {
-                hasTarget = false;
-                focusedTarget = null;
-            } else {
-                hasTarget = false;
-                focusedTarget = null;
-            }
-        }
-
-        if (focusedTarget != null && !focusedTarget.getHitbox().intersect(getRangeBox())) {
-            focusedTarget = null;
-            hasTarget = false;
-        }
-    }
-
     public void updateTargets(ArrayList<EnemyBase> targets) {
         this.targets = targets;
     }
@@ -140,10 +108,10 @@ public class WizardTower extends TowerBase {
     @Override
     public RectF getRangeBox() {
         RectF tempR = new RectF(
-                (int) location.left - (wizardTowerData.getRange() * 2),
-                (int) location.top - (wizardTowerData.getRange() * 2),
-                (int) (location.left + location.width() + (wizardTowerData.getRange() * 2)),
-                (int) (location.top + location.height() + (wizardTowerData.getRange() * 2)));
+                (int) location.centerX() - (wizardTowerData.getRange()),
+                (int) location.centerY() - (wizardTowerData.getRange()),
+                (int) (location.centerX() + (wizardTowerData.getRange())),
+                (int) (location.centerY() + (wizardTowerData.getRange())));
 
         return tempR;
     }

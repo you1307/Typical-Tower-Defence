@@ -6,7 +6,6 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Rect;
 import android.graphics.RectF;
-import android.util.Log;
 
 import com.thetechnoobs.typicaltowerdefence.R;
 import com.thetechnoobs.typicaltowerdefence.enemys.EnemyBase;
@@ -48,7 +47,7 @@ public class ArrowTower extends TowerBase {
     long timeLastShot = 0;
 
     public void update() {
-        updateTarget();
+        focusedTarget = updateTargetFirstInLine(arrowTowerData.getRange());
 
         if (hasTarget && !focusedTarget.shouldRemove()) {
             long newShotTime = System.currentTimeMillis();
@@ -74,43 +73,13 @@ public class ArrowTower extends TowerBase {
         this.targets = targets;
     }
 
-    boolean hasTarget = false;
-
-    private void updateTarget() {
-        Log.v("testing", "size: " + targets.size());
-
-        for (EnemyBase enemy : targets) {
-            focusedTarget = enemy;
-
-            if (focusedTarget != null && focusedTarget.getHitbox().intersect(getRangeBox())) {
-                hasTarget = true;
-                return;
-            } else if (focusedTarget != null && focusedTarget.getDistanceMoved() < enemy.getDistanceMoved()) {
-                focusedTarget = enemy;
-                hasTarget = true;
-                return;
-            } else if (focusedTarget.shouldRemove()) {
-                hasTarget = false;
-                focusedTarget = null;
-            } else {
-                hasTarget = false;
-                focusedTarget = null;
-            }
-        }
-
-        if (focusedTarget != null && !focusedTarget.getHitbox().intersect(getRangeBox())) {
-            focusedTarget = null;
-            hasTarget = false;
-        }
-    }
-
     @Override
     public RectF getRangeBox() {
         RectF tempR = new RectF(
-                (int) location.left - (arrowTowerData.getRange() * 2),
-                (int) location.top - (arrowTowerData.getRange() * 2),
-                (int) (location.left + location.width() + (arrowTowerData.getRange() * 2)),
-                (int) (location.top + location.height() + (arrowTowerData.getRange() * 2)));
+                (int) location.centerX() - (arrowTowerData.getRange()),
+                (int) location.centerY() - (arrowTowerData.getRange()),
+                (int) (location.centerX() + (arrowTowerData.getRange())),
+                (int) (location.centerY() + (arrowTowerData.getRange())));
 
         return tempR;
     }

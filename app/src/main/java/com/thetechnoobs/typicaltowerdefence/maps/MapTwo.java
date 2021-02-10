@@ -18,12 +18,6 @@ import java.util.ArrayList;
 
 public class MapTwo extends MapBase {
 
-    Resources resources;
-    int[] screenSize;
-    Context context;
-    Paint testPaint = new Paint();
-    ArrayList<PlotHandler> plotHandlers;
-
     public MapTwo(int[] screenSize, Resources resources, Context context) {
         this.screenSize = screenSize;
         this.resources = resources;
@@ -32,7 +26,6 @@ public class MapTwo extends MapBase {
 
         settupBitmap();
         plotHandlers = getMapTwoPlots(context);
-        Log.v("testing", "width: " + mapBitmap.getWidth() + " Height: " + mapBitmap.getHeight());
     }
 
     public ArrayList<PlotHandler> getMapTwoPlots(Context context) {

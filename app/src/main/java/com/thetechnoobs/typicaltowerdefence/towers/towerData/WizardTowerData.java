@@ -8,15 +8,15 @@ import java.util.Random;
 public class WizardTowerData {
     Context context;
     int plotNum;
-    int range, damage, price;
-    float fireRate;
+    int damage, price;
+    float fireRate, range;
 
     public WizardTowerData(Context context) {
         this.context = context;
         this.plotNum = plotNum;
     }
 
-    public int getRange() {
+    public float getRange() {
         return range;
     }
 

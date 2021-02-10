@@ -58,4 +58,8 @@ public class TroopsTower {
         arrowSpriteWidth = towerBitmap.getWidth()/8;
         arrowSpriteHeight = towerBitmap.getHeight()/4;
     }
+
+    public void setShowRange(boolean shouldShow) {
+
+    }
 }

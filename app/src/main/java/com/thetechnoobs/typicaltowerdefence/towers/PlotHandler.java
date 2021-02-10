@@ -7,6 +7,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
+import android.util.Log;
 
 import com.thetechnoobs.typicaltowerdefence.R;
 import com.thetechnoobs.typicaltowerdefence.enemys.EnemyBase;
@@ -182,7 +183,7 @@ public class PlotHandler {
         }
     }
 
-    public int getArrayPos() {
+    public int getPlotID() {
         return arrayPos;
     }
 
@@ -209,5 +210,59 @@ public class PlotHandler {
     public void removeTower() {
         towerType = 0;
         available = true;
+    }
+
+    public void setShowRange(boolean shouldShow) {
+        switch (towerType) {
+            case 0:
+                break;
+            case 1:
+                if (arrowTower != null) {
+                    arrowTower.setShowRange(shouldShow);
+                }
+                break;
+            case 2:
+                if (cannonTower != null) {
+                    cannonTower.setShowRange(shouldShow);
+                }
+                break;
+            case 3:
+                if (troopsTower != null) {
+                    troopsTower.setShowRange(shouldShow);
+                }
+                break;
+            case 4:
+                if (wizardTower != null) {
+                    wizardTower.setShowRange(shouldShow);
+                }
+                break;
+        }
+    }
+
+    public void upgradeTowerOneLevel() {
+        switch (towerType) {
+            case 0:
+                break;
+            case 1:
+                if (arrowTowerData != null) {
+                    arrowTowerData.upgrade();
+                }
+                break;
+            case 2:
+                if (cannonTower != null) {
+                    cannonTower.upgrade();
+                }
+                break;
+            case 3:
+                if (troopsTower != null) {
+                    //troopsTower.upgrade();
+                }
+                break;
+            case 4:
+                if (wizardTower != null) {
+                    wizardTower.upgrade();
+                }
+                break;
+        }
     }
 }

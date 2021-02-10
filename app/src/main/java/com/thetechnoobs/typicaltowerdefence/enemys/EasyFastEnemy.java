@@ -22,7 +22,7 @@ public class EasyFastEnemy extends EnemyBase {
         this.speed = Tools.convertDpToPixel(2f);
 
         debugPaint.setColor(Color.RED);
-        debugPaint.setTextSize(Tools.convertDpToPixel(20));
+        debugPaint.setTextSize((float) Tools.convertDpToPixel(20));
     }
 
     @Override

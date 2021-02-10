@@ -12,7 +12,7 @@ import java.util.ArrayList;
 public class EnemyBase {
 
     int curX, curY;
-    float speed = Tools.convertDpToPixel(1f);
+    double speed = Tools.convertDpToPixel(1f);
     double distanceMoved = 0;
     boolean removeMe = false;
     int MAX_HEATH = 10;

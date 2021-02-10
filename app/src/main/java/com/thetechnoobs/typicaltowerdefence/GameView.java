@@ -86,7 +86,7 @@ public class GameView extends SurfaceView implements Runnable {
     }
 
     private void tick() {
-        if(targets.size() < 10){
+        if(targets.size() < 4){
             addTestEnemy();
         }
 
@@ -100,6 +100,12 @@ public class GameView extends SurfaceView implements Runnable {
 
         for (PlotHandler plotHandler: plotHandlers){
             plotHandler.update(targets);
+
+            if(infoUpgradePage.shouldShow() && plotInFocus == plotHandler.getPlotID()){
+                plotHandler.setShowRange(true);
+            }else{
+                plotHandler.setShowRange(false);
+            }
         }
     }
 
@@ -165,8 +171,17 @@ public class GameView extends SurfaceView implements Runnable {
 
         if(infoUpgradePage.shouldShow() && infoUpgradePage.removeBtnPushed(touchPoint)){
             for(PlotHandler plotHandler: plotHandlers){
-                if(plotInFocus == plotHandler.getArrayPos()){
+                if(plotInFocus == plotHandler.getPlotID()){
                     plotHandler.removeTower();
+                }
+            }
+            infoUpgradePage.setShowMe(false);
+        }
+
+        if(infoUpgradePage.shouldShow() && infoUpgradePage.upgradeButtonPushed(touchPoint)){
+            for(PlotHandler plotHandler: plotHandlers){
+                if(plotInFocus == plotHandler.getPlotID()){
+                    plotHandler.upgradeTowerOneLevel();
                 }
             }
             infoUpgradePage.setShowMe(false);
@@ -199,7 +214,7 @@ public class GameView extends SurfaceView implements Runnable {
                     infoUpgradePage.setData(plotHandler);
                     infoUpgradePage.setShowMe(true);
                 }
-                plotInFocus = plotHandler.getArrayPos();
+                plotInFocus = plotHandler.getPlotID();
             }
         }
 
@@ -281,7 +296,7 @@ public class GameView extends SurfaceView implements Runnable {
 
     public PlotHandler plotInPos(int pos) {
         for (PlotHandler plotHandler : plotHandlers) {
-            if (pos == plotHandler.getArrayPos()) {
+            if (pos == plotHandler.getPlotID()) {
                 return plotHandler;
             }
         }

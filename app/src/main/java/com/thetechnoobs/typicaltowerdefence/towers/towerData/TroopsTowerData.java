@@ -8,15 +8,15 @@ import java.util.Random;
 public class TroopsTowerData {
     Context context;
     int plotNum;
-    int range, damage, troopSize, price;
-    float fireRate;
+    int damage, troopSize, price;
+    float fireRate, range;
 
     public TroopsTowerData(Context context) {
         this.context = context;
         this.plotNum = plotNum;
     }
 
-    public int getRange() {
+    public float getRange() {
         return range;
     }
 

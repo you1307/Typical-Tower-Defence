@@ -24,7 +24,6 @@ public class MapOne extends MapBase {
 
 
         settupBitmap();
-
         plotHandlers = getMapOnePlots(context);
     }
 

@@ -7,14 +7,14 @@ import java.util.Random;
 
 public class CannonTowerData {
     Context context;
-    int range, damage, price;
-    float fireRate;
+    int damage, price;
+    float fireRate, range;
 
     public CannonTowerData(Context context) {
         this.context = context;
     }
 
-    public int getRange() {
+    public float getRange() {
         return range;
     }
 

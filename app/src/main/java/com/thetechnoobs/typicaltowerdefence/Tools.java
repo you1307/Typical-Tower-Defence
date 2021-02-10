@@ -9,4 +9,8 @@ public class Tools {
         DisplayMetrics metrics = Resources.getSystem().getDisplayMetrics();
         return Math.round(dp * (metrics.densityDpi / 160f));
     }
+
+    public static double pxToDp(float px) {
+        return (px / Resources.getSystem().getDisplayMetrics().density);
+    }
 }

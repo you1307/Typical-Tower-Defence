@@ -25,7 +25,7 @@ public class InfoBuyPage {
     boolean showMe = false;
     float fireRateTXT;
     int damageTXT, price;
-    float rangeTXT;
+    double rangeTXT;
     int[] infoPageLocation;//{x, y};
     RectF buyBTN, upgradeBTN;
 

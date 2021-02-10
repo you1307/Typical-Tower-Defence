@@ -1,26 +1,22 @@
 package com.thetechnoobs.typicaltowerdefence.towers;
 
 import android.content.Context;
-import android.content.res.Resources;
-import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.Path;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.util.Log;
 
 import com.thetechnoobs.typicaltowerdefence.R;
-import com.thetechnoobs.typicaltowerdefence.Tools;
 import com.thetechnoobs.typicaltowerdefence.enemys.EnemyBase;
 import com.thetechnoobs.typicaltowerdefence.projectials.CannonBall;
 import com.thetechnoobs.typicaltowerdefence.towers.towerData.CannonTowerData;
 
 import java.util.ArrayList;
 
-public class CannonTower extends TowerBase{
+public class CannonTower extends TowerBase {
+
     CannonTowerData cannonTowerData;
     ArrayList<CannonBall> cannonBalls = new ArrayList<>();
 
@@ -41,17 +37,18 @@ public class CannonTower extends TowerBase{
     }
 
     @Override
-    public void draw(Canvas canvas){
+    public void draw(Canvas canvas) {
         super.draw(canvas);
 
-        for(CannonBall cannonBall: cannonBalls){
+        for (CannonBall cannonBall : cannonBalls) {
             cannonBall.draw(canvas);
         }
     }
 
     long timeLastShot = 0;
-    public void update(){
-        updateTarget();
+
+    public void update() {
+        focusedTarget = updateTargetFirstInLine(cannonTowerData.getRange());
 
         if (hasTarget && !focusedTarget.shouldRemove()) {
             long newShotTime = System.currentTimeMillis();
@@ -90,7 +87,6 @@ public class CannonTower extends TowerBase{
     }
 
     long ticks = 0;
-
     public void shootAnimation() {
         ticks++;
 
@@ -105,41 +101,12 @@ public class CannonTower extends TowerBase{
         }
     }
 
-    boolean hasTarget = false;
-    private void updateTarget() {
-        Log.v("testing", "size: " + targets.size());
-
-        for (EnemyBase enemy : targets) {
-            focusedTarget = enemy;
-
-            if(focusedTarget != null && focusedTarget.getHitbox().intersect(getRangeBox())){
-                hasTarget = true;
-                return;
-            }else if(focusedTarget != null && focusedTarget.getDistanceMoved() < enemy.getDistanceMoved() && enemy.getHitbox().intersect(getRangeBox())){
-                focusedTarget = enemy;
-                hasTarget = true;
-                return;
-            }else if (focusedTarget.shouldRemove()){
-                hasTarget = false;
-                focusedTarget = null;
-            }else{
-                hasTarget = false;
-                focusedTarget = null;
-            }
-        }
-
-        if (focusedTarget != null && !focusedTarget.getHitbox().intersect(getRangeBox())) {
-            focusedTarget = null;
-            hasTarget = false;
-        }
-    }
-
     public RectF getRangeBox() {
         RectF tempR = new RectF(
-                (int) location.left - (cannonTowerData.getRange() * 2),
-                (int) location.top  - (cannonTowerData.getRange() * 2),
-                (int) (location.left + location.width() + (cannonTowerData.getRange() * 2)),
-                (int) (location.top + location.height() + (cannonTowerData.getRange() * 2)));
+                (int) location.centerX() - (cannonTowerData.getRange()),
+                (int) location.centerY() - (cannonTowerData.getRange()),
+                (int) (location.centerX() + (cannonTowerData.getRange())),
+                (int) (location.centerY() + (cannonTowerData.getRange())));
 
         return tempR;
     }
@@ -153,10 +120,10 @@ public class CannonTower extends TowerBase{
         rangeHitbox.round(temprec);
     }
 
-    private void setupBitmap(){
+    private void setupBitmap() {
         towerBitmap = BitmapFactory.decodeResource(resources, R.drawable.tower_sprites);
 
-        SpriteWidth = towerBitmap.getWidth()/8;
-        SpriteHeight = towerBitmap.getHeight()/4;
+        SpriteWidth = towerBitmap.getWidth() / 8;
+        SpriteHeight = towerBitmap.getHeight() / 4;
     }
 }

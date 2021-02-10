@@ -44,4 +44,8 @@ public class ArrowTowerData {
         fireRate = DefaultValues.arrowFireRate;
         price = DefaultValues.arrowPrice;
     }
+
+    public void upgrade() {
+        
+    }
 }

@@ -45,6 +45,16 @@ public class EasyFastEnemy extends EnemyBase {
     }
 
     @Override
+    public int getHeath() {
+        return curHeath;
+    }
+
+    @Override
+    public int getDeathReward() {
+        return 7;
+    }
+
+    @Override
     public boolean shouldRemove() {
         return removeMe;
     }

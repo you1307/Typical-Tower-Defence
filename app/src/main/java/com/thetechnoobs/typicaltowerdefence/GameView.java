@@ -94,6 +94,10 @@ public class GameView extends SurfaceView implements Runnable {
         }
 
         for(int t = 0; t < targets.size(); t++){
+            if(targets.get(t).getHeath() <= 0){
+                userData.addCoins(targets.get(t).getDeathReward());
+            }
+
             if(targets.get(t).shouldRemove()){
                 targets.remove(t);
             }else{
@@ -255,6 +259,7 @@ public class GameView extends SurfaceView implements Runnable {
     }
 
     public void addTestEnemy(){
+            loadWave();
             targets.add(easySlowEnemy);
     }
 

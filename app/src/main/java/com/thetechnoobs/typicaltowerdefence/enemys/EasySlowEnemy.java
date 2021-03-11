@@ -88,6 +88,14 @@ public class EasySlowEnemy extends EnemyBase {
         return new Rect(x, y, x + spriteWidth, y + spriteHeight);
     }
 
+    public int getDeathReward(){
+        return 5;
+    }
+
+    public int getHeath(){
+        return curHeath;
+    }
+
 
     public double getDistanceMoved() {
         return distanceMoved;

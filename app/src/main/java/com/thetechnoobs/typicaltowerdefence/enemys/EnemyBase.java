@@ -203,5 +203,7 @@ public abstract class EnemyBase {
         return 0;
     }
 
+    public abstract int getHeath();
+    public abstract int getDeathReward();
     public abstract void updateSpriteFrame();
 }

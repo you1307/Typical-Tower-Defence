@@ -55,6 +55,6 @@ public class ArrowTowerData {
         damage += 1;
         range += Tools.convertDpToPixel(2);
         fireRate -= 50f;
-        price += 30;
+        price += 10;
     }
 }

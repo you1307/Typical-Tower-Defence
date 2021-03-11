@@ -48,7 +48,7 @@ public class GameView extends SurfaceView implements Runnable {
         setMapData(mapToLoad);
 
         infoBuyPage = new InfoBuyPage(context, userData);
-        infoUpgradePage = new InfoUpgradePage(context);
+        infoUpgradePage = new InfoUpgradePage(context, userData);
         towerSelectionWheel = new TowerBuySelectWheel(getResources(), infoBuyPage);
 
         loadWave();
@@ -204,7 +204,10 @@ public class GameView extends SurfaceView implements Runnable {
         if(infoUpgradePage.shouldShow() && infoUpgradePage.upgradeButtonPushed(touchPoint)){
             for(PlotHandler plotHandler: plotHandlers){
                 if(plotInFocus == plotHandler.getPlotID()){
-                    plotHandler.upgradeTowerOneLevel();
+                    if(userData.getUserCoins() >= infoUpgradePage.getPrice()){
+                        userData.removeCoins(infoUpgradePage.getPrice());
+                        plotHandler.upgradeTowerOneLevel();
+                    }
                     infoUpgradePage.setData(plotHandler);
                     infoUpgradePage.setShowMe(true);
                     return;

@@ -8,10 +8,12 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
+import android.graphics.Typeface;
 
 import com.thetechnoobs.typicaltowerdefence.GeneralSettings;
 import com.thetechnoobs.typicaltowerdefence.R;
 import com.thetechnoobs.typicaltowerdefence.Tools;
+import com.thetechnoobs.typicaltowerdefence.UserData;
 import com.thetechnoobs.typicaltowerdefence.towers.PlotHandler;
 import com.thetechnoobs.typicaltowerdefence.towers.TowerBase;
 import com.thetechnoobs.typicaltowerdefence.towers.towerData.ArrowTowerData;
@@ -21,28 +23,41 @@ import com.thetechnoobs.typicaltowerdefence.towers.towerData.WizardTowerData;
 
 public class InfoUpgradePage {
 
-    Bitmap infoPageBitmap, upgradeBtnBitmap, upgradeBtnDisabled, removeBTNBitmap;
+    Bitmap infoPageBitmap, upgradeBtnBitmap, upgradeBtnEnabledBitmap, upgradeBtnDisabled, removeBTNBitmap;
     Resources resources;
-    Paint textPaint = new Paint();
+    Paint textPaint, pricePaint;
     int loadedTower; //1 = arrow, 2 = cannon, 3 = troops, 4 = wizard
     TowerBase towerInFocus;
     boolean showMe = false;
     float fireRateTXT, rangeTXT;
-    int damageTXT, randomNum;
+    UserData userData;
+    int damageTXT, randomNum, price;
     int[] infoPageLocation;//{x, y};
     RectF upgradeBTN, removeBTN;
 
-    public InfoUpgradePage(Context context) {
+    public InfoUpgradePage(Context context, UserData userData) {
         this.resources = context.getResources();
-
-        textPaint.setColor(Color.BLACK);
-        textPaint.setTextSize(Tools.convertDpToPixel(15));
-        textPaint.setStrokeWidth(Tools.convertDpToPixel(20));
+        this.userData = userData;
+        iniPaints();
 
         infoPageLocation = GeneralSettings.getTowerInfoPageLocation(context);
 
         iniBitmaps();
         iniButtonPos();
+    }
+
+    private void iniPaints() {
+        textPaint = new Paint();
+        textPaint.setColor(Color.BLACK);
+        textPaint.setTextSize(Tools.convertDpToPixel(15));
+        textPaint.setStrokeWidth(Tools.convertDpToPixel(20));
+
+        pricePaint = new Paint();
+        Typeface typeface = resources.getFont(R.font.hand_drawing);
+        pricePaint.setTextSize(Tools.convertDpToPixel(30));
+        pricePaint.setColor(resources.getColor(R.color.coinGold, null));
+        pricePaint.setTypeface(typeface);
+
     }
 
     private void iniButtonPos() {
@@ -66,8 +81,8 @@ public class InfoUpgradePage {
                 (int) Tools.convertDpToPixel(200),
                 false);
 
-        upgradeBtnBitmap = BitmapFactory.decodeResource(resources, R.drawable.upgrade_button);
-        upgradeBtnBitmap = Bitmap.createScaledBitmap(upgradeBtnBitmap,
+        upgradeBtnEnabledBitmap = BitmapFactory.decodeResource(resources, R.drawable.upgrade_button);
+        upgradeBtnEnabledBitmap = Bitmap.createScaledBitmap(upgradeBtnEnabledBitmap,
                 (int) Tools.convertDpToPixel(80),
                 (int) Tools.convertDpToPixel(35),
                 false);
@@ -82,6 +97,8 @@ public class InfoUpgradePage {
                 (int) Tools.convertDpToPixel(80),
                 (int) Tools.convertDpToPixel(35),
                 false);
+
+        upgradeBtnBitmap = upgradeBtnDisabled;//set so its not null
     }
 
     public void setShowMe(Boolean show) {
@@ -120,7 +137,20 @@ public class InfoUpgradePage {
         }
     }
 
+    public void update() {
+        if(userData.getUserCoins() >= price){
+            upgradeBtnBitmap = upgradeBtnEnabledBitmap;
+        }else{
+            upgradeBtnBitmap = upgradeBtnDisabled;
+        }
+    }
+
     private void drawData(Canvas canvas) {
+        canvas.drawText(String.valueOf(price),
+                infoPageLocation[0] + Tools.convertDpToPixel(70),
+                infoPageLocation[1] + Tools.convertDpToPixel(25),
+                pricePaint);
+
         canvas.drawText("Damage: " + damageTXT,
                 infoPageLocation[0] + Tools.convertDpToPixel(10),
                 infoPageLocation[1] + Tools.convertDpToPixel(60),
@@ -151,6 +181,7 @@ public class InfoUpgradePage {
 
     public void loadArrowTowerData(ArrowTowerData arrowTowerData) {
         loadedTower = 1;
+        price = arrowTowerData.getPrice();
         rangeTXT = arrowTowerData.getRange();
         damageTXT = arrowTowerData.getDamage();
         fireRateTXT = arrowTowerData.getFireRate();
@@ -209,7 +240,7 @@ public class InfoUpgradePage {
         }
     }
 
-    public void update() {
-
+    public int getPrice(){
+        return price;
     }
 }

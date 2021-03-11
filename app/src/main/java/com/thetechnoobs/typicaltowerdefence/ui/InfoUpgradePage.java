@@ -13,16 +13,19 @@ import com.thetechnoobs.typicaltowerdefence.GeneralSettings;
 import com.thetechnoobs.typicaltowerdefence.R;
 import com.thetechnoobs.typicaltowerdefence.Tools;
 import com.thetechnoobs.typicaltowerdefence.towers.PlotHandler;
+import com.thetechnoobs.typicaltowerdefence.towers.TowerBase;
 import com.thetechnoobs.typicaltowerdefence.towers.towerData.ArrowTowerData;
 import com.thetechnoobs.typicaltowerdefence.towers.towerData.CannonTowerData;
 import com.thetechnoobs.typicaltowerdefence.towers.towerData.TroopsTowerData;
 import com.thetechnoobs.typicaltowerdefence.towers.towerData.WizardTowerData;
 
 public class InfoUpgradePage {
+
     Bitmap infoPageBitmap, upgradeBtnBitmap, upgradeBtnDisabled, removeBTNBitmap;
     Resources resources;
     Paint textPaint = new Paint();
     int loadedTower; //1 = arrow, 2 = cannon, 3 = troops, 4 = wizard
+    TowerBase towerInFocus;
     boolean showMe = false;
     float fireRateTXT, rangeTXT;
     int damageTXT, randomNum;
@@ -81,17 +84,19 @@ public class InfoUpgradePage {
                 false);
     }
 
-    public void setShowMe(Boolean show){
+    public void setShowMe(Boolean show) {
         showMe = show;
     }
 
     public void draw(Canvas canvas) {
         canvas.drawBitmap(infoPageBitmap, infoPageLocation[0], infoPageLocation[1], null);
 
+
         canvas.drawBitmap(upgradeBtnBitmap,
                 infoPageLocation[0] + Tools.convertDpToPixel(20),
                 infoPageLocation[1] + Tools.convertDpToPixel(200),
                 null);
+
 
         canvas.drawBitmap(removeBTNBitmap,
                 infoPageLocation[0] + Tools.convertDpToPixel(105),
@@ -103,14 +108,14 @@ public class InfoUpgradePage {
         //canvas.drawRect(removeBTN, textPaint);
     }
 
-    public boolean shouldShow(){
+    public boolean shouldShow() {
         return showMe;
     }
 
-    public boolean upgradeButtonPushed(RectF touchPoint){
-        if(touchPoint.intersect(upgradeBTN)){
+    public boolean upgradeButtonPushed(RectF touchPoint) {
+        if (touchPoint.intersect(upgradeBTN)) {
             return true;
-        }else{
+        } else {
             return false;
         }
     }
@@ -131,7 +136,7 @@ public class InfoUpgradePage {
                 infoPageLocation[1] + Tools.convertDpToPixel(100),
                 textPaint);
 
-        canvas.drawText("Tower Name: "+randomNum,
+        canvas.drawText("Tower Name: " + randomNum,
                 infoPageLocation[0] + Tools.convertDpToPixel(10),
                 infoPageLocation[1] + Tools.convertDpToPixel(140),
                 textPaint);
@@ -161,6 +166,7 @@ public class InfoUpgradePage {
     }
 
     int troopSizeTXT;
+
     public void loadTroopsTowerData(TroopsTowerData troopsTowerData) {
         loadedTower = 3;
         troopSizeTXT = troopsTowerData.getTroopSize();
@@ -179,7 +185,7 @@ public class InfoUpgradePage {
     }
 
     public void setData(PlotHandler plotHandler) {
-        switch (plotHandler.getOccupant()){
+        switch (plotHandler.getOccupant()) {
             case 1:
                 loadArrowTowerData(plotHandler.getArrowData());
                 break;
@@ -196,9 +202,9 @@ public class InfoUpgradePage {
     }
 
     public boolean removeBtnPushed(RectF touchPoint) {
-        if(touchPoint.intersect(removeBTN)){
+        if (touchPoint.intersect(removeBTN)) {
             return true;
-        }else{
+        } else {
             return false;
         }
     }

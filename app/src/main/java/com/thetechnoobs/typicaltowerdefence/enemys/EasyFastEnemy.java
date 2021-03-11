@@ -34,6 +34,11 @@ public class EasyFastEnemy extends EnemyBase {
         }
     }
 
+    @Override
+    public void updateSpriteFrame() {
+
+    }
+
 
     public double getDistanceMoved() {
         return distanceMoved;

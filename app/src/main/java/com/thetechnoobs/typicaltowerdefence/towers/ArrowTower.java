@@ -8,6 +8,7 @@ import android.graphics.Rect;
 import android.graphics.RectF;
 
 import com.thetechnoobs.typicaltowerdefence.R;
+import com.thetechnoobs.typicaltowerdefence.Tools;
 import com.thetechnoobs.typicaltowerdefence.enemys.EnemyBase;
 import com.thetechnoobs.typicaltowerdefence.projectials.Arrow;
 import com.thetechnoobs.typicaltowerdefence.towers.towerData.ArrowTowerData;
@@ -99,6 +100,7 @@ public class ArrowTower extends TowerBase {
                 context,
                 focusedTarget,
                 screenSize, arrowTowerData.getDamage());
+
         arrows.add(newArrow);
     }
 

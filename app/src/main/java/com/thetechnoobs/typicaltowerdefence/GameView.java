@@ -8,7 +8,6 @@ import android.view.MotionEvent;
 import android.view.SurfaceView;
 import android.widget.Toast;
 
-import com.thetechnoobs.typicaltowerdefence.enemys.EasyFastEnemy;
 import com.thetechnoobs.typicaltowerdefence.enemys.EasySlowEnemy;
 import com.thetechnoobs.typicaltowerdefence.enemys.EnemyBase;
 import com.thetechnoobs.typicaltowerdefence.maps.MapBase;
@@ -50,13 +49,15 @@ public class GameView extends SurfaceView implements Runnable {
         infoUpgradePage = new InfoUpgradePage(context);
         towerSelectionWheel = new TowerBuySelectWheel(getResources(), infoBuyPage);
 
+        loadWave();
+
     }
 
     @Override
     public void run() {
         while (running) {
             long lastTime = System.nanoTime();
-            final double amountOfTicks = 60.0;
+            final double amountOfTicks = 60.00;
             double ns = 1000000000 / amountOfTicks;
             int ticks = 0;
             frames = 0;
@@ -86,7 +87,7 @@ public class GameView extends SurfaceView implements Runnable {
     }
 
     private void tick() {
-        if(targets.size() < 20){
+        if(targets.size() < 1){
             addTestEnemy();
         }
 
@@ -231,25 +232,16 @@ public class GameView extends SurfaceView implements Runnable {
         }
     }
 
-    long lastShotTime = 0;
+    EasySlowEnemy easySlowEnemy;
+    public void loadWave(){
+        easySlowEnemy = new EasySlowEnemy(
+                (int) Tools.convertDpToPixel(165),
+                screenSize[1] + 20,
+                screenSize, selectedMap().enemyPathPoints(), getResources());
+    }
+
     public void addTestEnemy(){
-        long curTime = System.currentTimeMillis();
-
-        if(curTime - lastShotTime >= 500){
-            lastShotTime = curTime;
-            EasySlowEnemy easySlowEnemy = new EasySlowEnemy(
-                    (int) Tools.convertDpToPixel(165),
-                    screenSize[1] + 50,
-                    screenSize, selectedMap().enemyPathPoints());
-
-            EasyFastEnemy easyFastEnemy = new EasyFastEnemy(
-                    (int) Tools.convertDpToPixel(165),
-                    screenSize[1] + 50,
-                    screenSize, selectedMap().enemyPathPoints());
-
-
             targets.add(easySlowEnemy);
-        }
     }
 
     MapOne mapOne;

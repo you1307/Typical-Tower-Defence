@@ -1,7 +1,6 @@
 package com.thetechnoobs.typicaltowerdefence.towers.towerData;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 
 import com.thetechnoobs.typicaltowerdefence.Tools;
 
@@ -9,7 +8,8 @@ import java.util.Random;
 
 public class CannonTowerData {
     Context context;
-    int damage, price;
+    int damage;
+    float price;
     float fireRate, range;
 
     public CannonTowerData(Context context) {
@@ -17,10 +17,14 @@ public class CannonTowerData {
     }
 
     public float getRange() {
-        return range;
+        if(range < 0){
+            return 1f;
+        }else{
+            return range;
+        }
     }
 
-    public int getPrice(){
+    public float getPrice(){
         return price;
     }
 

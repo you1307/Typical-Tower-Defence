@@ -19,7 +19,11 @@ public class WizardTowerData {
     }
 
     public float getRange() {
-        return range;
+        if(range < 0){
+            return 1f;
+        }else{
+            return range;
+        }
     }
 
     public int getPrice(){

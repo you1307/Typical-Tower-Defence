@@ -9,16 +9,16 @@ public class DefaultValues {
     public static final int arrowPrice = 50;
 
 
-    public static final float cannonRange = Tools.convertDpToPixel(85);
+    public static final float cannonRange = Tools.convertDpToPixel(100);
     public static final int cannonDamage = 5;
-    public static final int cannonPrice = 100;
+    public static final int cannonPrice = 1000;
     public static final float cannonFireRate = 2.0f;
 
 
     public static final float wizardRange = Tools.convertDpToPixel(90);
     public static final int wizardDamage = 2;
     public static final int wizardPrice = 150;
-    public static final float wizardFireRate = 1.5f;
+    public static final float wizardFireRate = 1000f;
 
 
     public static final int troopsDamage = 2;

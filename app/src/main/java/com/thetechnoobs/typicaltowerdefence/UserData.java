@@ -4,16 +4,13 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 public class UserData {
-    public static void addCoins(Context context, int coins){
-        SharedPreferences sharedPreferences = context.getSharedPreferences("UserData", Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
+    private int coins = 50;
 
-        editor.putInt("coins", coins);
-        editor.apply();
+    public void addCoins(int coinsToAdd){
+        coins += coinsToAdd;
     }
 
-    public static int getUserCoins(Context context){
-        SharedPreferences sharedPreferences = context.getSharedPreferences("UserData", Context.MODE_PRIVATE);
-        return sharedPreferences.getInt("coins", 999999);
+    public int getUserCoins(){
+        return coins;
     }
 }

@@ -109,9 +109,9 @@ public class MapTwo extends MapBase {
                 mapBitmap.getHeight() / 2f + pointHeight);
 
         RectF point5 = new RectF(
-                mapBitmap.getWidth() / 1.8f,
+                mapBitmap.getWidth() / 2.0f,
                 mapBitmap.getHeight() / 7f,
-                mapBitmap.getWidth() / 1.8f + pointWidth,
+                mapBitmap.getWidth() / 2.0f + pointWidth,
                 mapBitmap.getHeight() / 7f + pointHeight);
 
         RectF point6 = new RectF(

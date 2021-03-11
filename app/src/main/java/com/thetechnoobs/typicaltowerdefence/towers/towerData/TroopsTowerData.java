@@ -17,7 +17,11 @@ public class TroopsTowerData {
     }
 
     public float getRange() {
-        return range;
+        if(fireRate < 0){
+            return 1f;
+        }else{
+            return fireRate;
+        }
     }
 
     public int getDamage() {

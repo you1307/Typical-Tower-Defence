@@ -22,7 +22,7 @@ public class Arrow extends ProjectileBase{
         this.target = target;
         this.context = context;
         this.damage = damage;
-        this.speed = Tools.convertDpToPixel(15f);
+        this.speed = Tools.convertDpToPixel(10f);
 
         projectileBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.arrow);
         calculateVolocity();

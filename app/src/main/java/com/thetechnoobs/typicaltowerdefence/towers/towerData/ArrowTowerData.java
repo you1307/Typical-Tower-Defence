@@ -30,7 +30,11 @@ public class ArrowTowerData {
     }
 
     public float getFireRate() {
-        return fireRate;
+        if(fireRate < 0){
+            return 1f;
+        }else{
+            return fireRate;
+        }
     }
 
     public int getRandomNum() {

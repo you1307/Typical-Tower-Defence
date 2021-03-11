@@ -24,7 +24,8 @@ public class InfoBuyPage {
     int loadedTower; //1 = arrow, 2 = cannon, 3 = troops, 4 = wizard
     boolean showMe = false;
     float fireRateTXT;
-    int damageTXT, price;
+    int damageTXT;
+    float price;
     double rangeTXT;
     int[] infoPageLocation;//{x, y};
     RectF buyBTN, upgradeBTN;

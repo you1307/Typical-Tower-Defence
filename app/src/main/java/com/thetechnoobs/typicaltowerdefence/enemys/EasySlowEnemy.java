@@ -1,9 +1,14 @@
 package com.thetechnoobs.typicaltowerdefence.enemys;
 
+import android.content.Context;
+import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.graphics.Color;
+import android.graphics.Rect;
 import android.graphics.RectF;
 
+import com.thetechnoobs.typicaltowerdefence.R;
 import com.thetechnoobs.typicaltowerdefence.Tools;
 
 import java.util.ArrayList;
@@ -11,17 +16,31 @@ import java.util.ArrayList;
 public class EasySlowEnemy extends EnemyBase {
 
     double distanceMoved = 0;
+    Bitmap walkingUpSpriteSheet, walkingLeftSpriteSheet, walkingRightSpriteSheet, walkingDownSpriteSheet;
+    Bitmap curDirectionSpriteSheet;
+    int spriteWidth, spriteHeight;
 
-    public EasySlowEnemy(int x, int y, int[] screenSize, ArrayList<RectF> mapPath) {
+    public EasySlowEnemy(int x, int y, int[] screenSize, ArrayList<RectF> mapPath, Resources resources) {
         setCurX(x);
         setCurY(y);
         this.mapPath = mapPath;
         this.screenSize = screenSize;
+        this.resources = resources;
+        this.MAX_HEATH = 15;
+        this.curHeath = MAX_HEATH;
 
         this.speed = Tools.convertDpToPixel(1f);
+        debugPaint.setTextSize(Tools.convertDpToPixel(20));
+        loadDirectionSpriteSheets();
+    }
 
-        debugPaint.setColor(Color.RED);
-        debugPaint.setTextSize((float) Tools.convertDpToPixel(20));
+    private void loadDirectionSpriteSheets() {
+        walkingUpSpriteSheet = BitmapFactory.decodeResource(resources, R.drawable.leather_warrior_walk_back_sheet);
+        walkingRightSpriteSheet = BitmapFactory.decodeResource(resources, R.drawable.leather_walking_right_spritesheet);
+        walkingLeftSpriteSheet = BitmapFactory.decodeResource(resources, R.drawable.leather_walking_left_spritesheet);
+
+        spriteHeight = walkingUpSpriteSheet.getHeight();
+        spriteWidth = walkingUpSpriteSheet.getWidth() / 30;
     }
 
     @Override
@@ -33,6 +52,42 @@ public class EasySlowEnemy extends EnemyBase {
         }
     }
 
+    @Override
+    public void updateSpriteFrame() {
+        switch (direction) {
+            case 2:
+                curDirectionSpriteSheet = walkingUpSpriteSheet;
+                break;
+            case 1:
+                curDirectionSpriteSheet = walkingLeftSpriteSheet;
+                break;
+            case 3:
+                curDirectionSpriteSheet = walkingRightSpriteSheet;
+                break;
+            case 4:
+                curDirectionSpriteSheet = walkingUpSpriteSheet;
+                break;
+        }
+
+
+        spriteHeight = curDirectionSpriteSheet.getHeight();
+        spriteWidth = curDirectionSpriteSheet.getWidth() / 30;
+
+
+        if (curSpriteFrame >= 30) {
+            curSpriteFrame = 1;
+        }
+
+        curSpriteFrame++;
+    }
+
+    private Rect getFrame() {
+        int x = spriteWidth * curSpriteFrame - spriteWidth;
+        int y = 1;
+
+        return new Rect(x, y, x + spriteWidth, y + spriteHeight);
+    }
+
 
     public double getDistanceMoved() {
         return distanceMoved;
@@ -42,12 +97,15 @@ public class EasySlowEnemy extends EnemyBase {
     public void draw(Canvas canvas) {
         super.draw(canvas);
 
-        debugPaint.setColor(Color.RED);
-        canvas.drawRect(getHitbox(), debugPaint);
+        if(curDirectionSpriteSheet != null){
+            canvas.drawBitmap(curDirectionSpriteSheet, getFrame(), getHitbox(), null);
+        }
+
+        //canvas.drawRect(getHitbox(), debugPaint);
     }
 
     public RectF getHitbox() {
-        return new RectF(getCurX(), getCurY(), getCurX() + (float) Tools.convertDpToPixel(10), getCurY() + (float) Tools.convertDpToPixel(10));
+        return new RectF(getCurX(), getCurY(), getCurX() + (float) Tools.convertDpToPixel(30), getCurY() + (float) Tools.convertDpToPixel(30));
     }
 }
 

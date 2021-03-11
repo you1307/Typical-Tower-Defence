@@ -10,6 +10,10 @@ public class UserData {
         coins += coinsToAdd;
     }
 
+    public void removeCoins(int amountToRemove){
+        coins -= amountToRemove;
+    }
+
     public int getUserCoins(){
         return coins;
     }

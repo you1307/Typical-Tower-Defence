@@ -35,17 +35,19 @@ public class GameView extends SurfaceView implements Runnable {
     TowerBuySelectWheel towerSelectionWheel;
     InfoBuyPage infoBuyPage;
     InfoUpgradePage infoUpgradePage;
+    UserData userData;
     ArrayList<EnemyBase> targets = new ArrayList<>();
 
     public GameView(Context context, int[] screenSize, int mapToLoad) {
         super(context);
+        userData = new UserData();
         this.mapToLoad = mapToLoad;
         this.screenSize = screenSize;
-        coinHeader = new CoinHeader(getResources(), context);
+        coinHeader = new CoinHeader(getResources(), context, userData);
 
         setMapData(mapToLoad);
 
-        infoBuyPage = new InfoBuyPage(context);
+        infoBuyPage = new InfoBuyPage(context, userData);
         infoUpgradePage = new InfoUpgradePage(context);
         towerSelectionWheel = new TowerBuySelectWheel(getResources(), infoBuyPage);
 
@@ -108,6 +110,12 @@ public class GameView extends SurfaceView implements Runnable {
             }else{
                 plotHandler.setShowRange(false);
             }
+
+
+            //update buy pannel if its showing
+            if(infoBuyPage.shouldShow()){
+                infoBuyPage.update();
+            }
         }
     }
 
@@ -164,11 +172,17 @@ public class GameView extends SurfaceView implements Runnable {
     private void presedDown(RectF touchPoint) {
         boolean plotTouched = false;
 
-        //check if buy button is pushed from buy pannel
+        //check if buy button is pushed from buy pannel while is being shown
         if (infoBuyPage.shouldShow() && infoBuyPage.buyButtonPushed(touchPoint)) {
-            plotInPos(plotInFocus).setTowerType(infoBuyPage.getLoadedTower());
-            infoBuyPage.setShowMe(false);
-            towerSelectionWheel.setShowMe(false);
+            if(userData.getUserCoins() >= infoBuyPage.getPrice()){
+                userData.removeCoins(infoBuyPage.getPrice());
+                plotInPos(plotInFocus).setTowerType(infoBuyPage.getLoadedTower());
+                infoBuyPage.setShowMe(false);
+                towerSelectionWheel.setShowMe(false);
+            }else{
+                infoBuyPage.setShowMe(true);
+                towerSelectionWheel.setShowMe(true);
+            }
             return;
         }
 

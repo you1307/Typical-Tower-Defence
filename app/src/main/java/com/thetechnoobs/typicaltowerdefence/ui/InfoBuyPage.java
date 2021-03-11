@@ -8,39 +8,52 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
+import android.graphics.Typeface;
 
 import com.thetechnoobs.typicaltowerdefence.GeneralSettings;
 import com.thetechnoobs.typicaltowerdefence.R;
 import com.thetechnoobs.typicaltowerdefence.Tools;
-import com.thetechnoobs.typicaltowerdefence.towers.towerData.CannonTowerData;
-import com.thetechnoobs.typicaltowerdefence.towers.towerData.TroopsTowerData;
-import com.thetechnoobs.typicaltowerdefence.towers.towerData.WizardTowerData;
+import com.thetechnoobs.typicaltowerdefence.UserData;
 import com.thetechnoobs.typicaltowerdefence.towers.towerData.DefaultValues;
 
 public class InfoBuyPage {
-    Bitmap infoPageBitmap, buyBtnBitmap, buyBtnBitmapDisabled, upgradeBtnBitmap, upgradeBtnDisabled;
+    Bitmap infoPageBitmap, buyBtnBitmap, buyBtnEnabledBitmap, buyBtnBitmapDisabled, upgradeBtnBitmap, upgradeBtnDisabled;
     Resources resources;
-    Paint textPaint = new Paint();
+    Paint textPaint, pricePaint;
     int loadedTower; //1 = arrow, 2 = cannon, 3 = troops, 4 = wizard
     boolean showMe = false;
     float fireRateTXT;
     int damageTXT;
-    float price;
+    int price;
+    UserData userData;
     double rangeTXT;
     int[] infoPageLocation;//{x, y};
     RectF buyBTN, upgradeBTN;
 
-    public InfoBuyPage(Context context) {
+    public InfoBuyPage(Context context, UserData userData) {
         this.resources = context.getResources();
+        this.userData = userData;
 
-        textPaint.setColor(Color.BLACK);
-        textPaint.setTextSize(Tools.convertDpToPixel(15));
-        textPaint.setStrokeWidth(Tools.convertDpToPixel(20));
+
+        setupTextPaint();
 
         infoPageLocation = GeneralSettings.getTowerInfoPageLocation(context);
 
         iniBitmaps();
         iniButtonPos();
+    }
+
+    private void setupTextPaint() {
+        textPaint = new Paint();
+        textPaint.setColor(Color.BLACK);
+        textPaint.setTextSize(Tools.convertDpToPixel(15));
+        textPaint.setStrokeWidth(Tools.convertDpToPixel(20));
+
+        pricePaint = new Paint();
+        Typeface coustomBuyPricePaintFont = resources.getFont(R.font.hand_drawing);
+        pricePaint.setColor(resources.getColor(R.color.coinGold, null));
+        pricePaint.setTypeface(coustomBuyPricePaintFont);
+        pricePaint.setTextSize(Tools.convertDpToPixel(30));
     }
 
     public int getLoadedTower(){
@@ -68,8 +81,8 @@ public class InfoBuyPage {
                 (int) Tools.convertDpToPixel(200),
                 false);
 
-        buyBtnBitmap = BitmapFactory.decodeResource(resources, R.drawable.buy_button);
-        buyBtnBitmap = Bitmap.createScaledBitmap(buyBtnBitmap,
+        buyBtnEnabledBitmap = BitmapFactory.decodeResource(resources, R.drawable.buy_button);
+        buyBtnEnabledBitmap = Bitmap.createScaledBitmap(buyBtnEnabledBitmap,
                 (int) Tools.convertDpToPixel(80),
                 (int) Tools.convertDpToPixel(35),
                 false);
@@ -91,6 +104,16 @@ public class InfoBuyPage {
                 (int) Tools.convertDpToPixel(80),
                 (int) Tools.convertDpToPixel(35),
                 false);
+
+        buyBtnBitmap = buyBtnBitmapDisabled;//ini bitmap to prevent it staying null
+    }
+
+    public void update(){
+        if(userData.getUserCoins() >= price){
+            buyBtnBitmap = buyBtnEnabledBitmap;
+        }else{
+            buyBtnBitmap = buyBtnBitmapDisabled;
+        }
     }
 
     public void setShowMe(Boolean show){
@@ -106,11 +129,6 @@ public class InfoBuyPage {
                 infoPageLocation[0] + Tools.convertDpToPixel(60),
                 infoPageLocation[1] + Tools.convertDpToPixel(200),
                 null);
-
-//        canvas.drawBitmap(upgradeBtnBitmap,
-//                infoPageLocation[0] + Tools.convertDpToPixel(110),
-//                infoPageLocation[1] + Tools.convertDpToPixel(200),
-//                null);
 
         drawData(canvas);
     }
@@ -129,9 +147,9 @@ public class InfoBuyPage {
 
     private void drawData(Canvas canvas) {
         canvas.drawText(String.valueOf(price),
-                infoPageLocation[0] + Tools.convertDpToPixel(10),
-                infoPageLocation[1] + Tools.convertDpToPixel(30),
-                textPaint);
+                infoPageLocation[0] + Tools.convertDpToPixel(70),
+                infoPageLocation[1] + Tools.convertDpToPixel(25),
+                pricePaint);
 
         canvas.drawText("Damage: " + damageTXT,
                 infoPageLocation[0] + Tools.convertDpToPixel(10),
@@ -188,5 +206,9 @@ public class InfoBuyPage {
         damageTXT = DefaultValues.wizardDamage;
         fireRateTXT = DefaultValues.wizardFireRate;
         price = DefaultValues.wizardPrice;
+    }
+
+    public int getPrice() {
+        return price;
     }
 }

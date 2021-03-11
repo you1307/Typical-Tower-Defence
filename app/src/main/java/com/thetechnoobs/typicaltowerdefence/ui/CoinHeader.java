@@ -19,15 +19,16 @@ public class CoinHeader {
     Context context;
     Paint dataTextPaint = new Paint();
     int[] headerLoc;
+    UserData userData;
 
-    public CoinHeader(Resources resources, Context context){
+    public CoinHeader(Resources resources, Context context, UserData userData){
         this.resources = resources;
         this.context = context;
-        int GoldColor = Color.parseColor("#D4AF37");
+        this.userData = userData;
 
         headerLoc = GeneralSettings.getCoinHeaderLocation(context);
 
-        dataTextPaint.setColor(GoldColor);
+        dataTextPaint.setColor(resources.getColor(R.color.coinGold, null));
         dataTextPaint.setTextSize(Tools.convertDpToPixel(20));
         dataTextPaint.setStrokeWidth(Tools.convertDpToPixel(15));
 
@@ -37,7 +38,7 @@ public class CoinHeader {
     public void draw(Canvas canvas){
         canvas.drawBitmap(moneyBar, headerLoc[0], headerLoc[1], null);
 
-        canvas.drawText(String.valueOf(UserData.getUserCoins(context)),
+        canvas.drawText(String.valueOf(userData.getUserCoins()),
                 headerLoc[0] + (int) Tools.convertDpToPixel(35),
                 headerLoc[1] + (int) Tools.convertDpToPixel(25),
                 dataTextPaint);

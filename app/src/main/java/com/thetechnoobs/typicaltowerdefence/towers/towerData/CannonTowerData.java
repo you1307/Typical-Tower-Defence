@@ -9,7 +9,7 @@ import java.util.Random;
 public class CannonTowerData {
     Context context;
     int damage;
-    float price;
+    int price;
     float fireRate, range;
 
     public CannonTowerData(Context context) {
@@ -24,7 +24,7 @@ public class CannonTowerData {
         }
     }
 
-    public float getPrice(){
+    public int getPrice(){
         return price;
     }
 

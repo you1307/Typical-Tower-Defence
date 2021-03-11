@@ -4,7 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 public class UserData {
-    private int coins = 300;
+    private int coins = 3000;
 
     public void addCoins(int coinsToAdd){
         coins += coinsToAdd;

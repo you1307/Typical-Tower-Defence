@@ -7,7 +7,6 @@ import com.thetechnoobs.typicaltowerdefence.Tools;
 import java.util.Random;
 
 public class ArrowTowerData {
-
     Context context;
     int damage, price;
     float range;

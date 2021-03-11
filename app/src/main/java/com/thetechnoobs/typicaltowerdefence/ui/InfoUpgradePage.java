@@ -190,6 +190,7 @@ public class InfoUpgradePage {
 
     public void loadCannonTowerData(CannonTowerData cannonTowerData) {
         loadedTower = 2;
+        price = cannonTowerData.getPrice();
         rangeTXT = cannonTowerData.getRange();
         damageTXT = cannonTowerData.getDamage();
         fireRateTXT = cannonTowerData.getFireRate();
@@ -209,6 +210,7 @@ public class InfoUpgradePage {
 
     public void loadWizardTowerData(WizardTowerData wizardTowerData) {
         loadedTower = 4;
+        price = wizardTowerData.getPrice();
         rangeTXT = wizardTowerData.getRange();
         damageTXT = wizardTowerData.getDamage();
         fireRateTXT = wizardTowerData.getFireRate();

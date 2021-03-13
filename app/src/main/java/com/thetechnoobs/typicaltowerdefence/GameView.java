@@ -51,8 +51,16 @@ public class GameView extends SurfaceView implements Runnable {
         infoUpgradePage = new InfoUpgradePage(context, userData);
         towerSelectionWheel = new TowerBuySelectWheel(getResources(), infoBuyPage);
 
-        loadWave();
+        startWaveManager();
 
+    }
+
+    Thread waveManagerThread;
+    WaveManager waveManager;
+    private void startWaveManager() {
+        waveManager = new WaveManager(getContext(), this, screenSize);
+        waveManagerThread = new Thread(waveManager);
+        waveManagerThread.start();
     }
 
     @Override
@@ -89,9 +97,6 @@ public class GameView extends SurfaceView implements Runnable {
     }
 
     private void tick() {
-        if(targets.size() < 1){
-            addTestEnemy();
-        }
 
         for(int t = 0; t < targets.size(); t++){
             if(targets.get(t).getHeath() <= 0){
@@ -131,8 +136,8 @@ public class GameView extends SurfaceView implements Runnable {
 
             coinHeader.draw(canvas);
 
-            for(EnemyBase t: targets){
-                t.draw(canvas);
+            for(int t = 0; t < targets.size(); t++){
+                targets.get(t).draw(canvas);
             }
 
             for (PlotHandler plotHandler : plotHandlers) {
@@ -253,17 +258,8 @@ public class GameView extends SurfaceView implements Runnable {
         }
     }
 
-    EasySlowEnemy easySlowEnemy;
-    public void loadWave(){
-        easySlowEnemy = new EasySlowEnemy(
-                (int) Tools.convertDpToPixel(165),
-                screenSize[1] + 20,
-                screenSize, selectedMap().enemyPathPoints(), getResources());
-    }
-
-    public void addTestEnemy(){
-            loadWave();
-            targets.add(easySlowEnemy);
+    public void addTestEnemy(EnemyBase enemyBase){
+            targets.add(enemyBase);
     }
 
     MapOne mapOne;
@@ -307,11 +303,12 @@ public class GameView extends SurfaceView implements Runnable {
     }
 
     public void stopRunning() {
-        running = false;
+        cleanUp();
     }
 
     public void cleanUp() {
         running = false;
+        waveManager.stop();
     }
 
     public PlotHandler plotInPos(int pos) {

@@ -24,6 +24,7 @@ public class GameViewActivity extends AppCompatActivity {
         getWindow().getWindowManager().getDefaultDisplay().getSize(point);
         int[] screenSize = {point.x, point.y};
 
+
         gameView = new GameView(this, screenSize, mapToLoad);
         gameThread = new Thread(gameView);
 
@@ -32,7 +33,7 @@ public class GameViewActivity extends AppCompatActivity {
         //startThread();
     }
 
-    private void startThread() {
+    private void startThread(){
         gameThread.start();
     }
 

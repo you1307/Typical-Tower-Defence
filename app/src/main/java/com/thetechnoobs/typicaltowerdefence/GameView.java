@@ -8,6 +8,8 @@ import android.view.MotionEvent;
 import android.view.SurfaceView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+
 import com.thetechnoobs.typicaltowerdefence.enemys.EasySlowEnemy;
 import com.thetechnoobs.typicaltowerdefence.enemys.EnemyBase;
 import com.thetechnoobs.typicaltowerdefence.maps.MapBase;
@@ -19,10 +21,12 @@ import com.thetechnoobs.typicaltowerdefence.ui.CoinHeader;
 import com.thetechnoobs.typicaltowerdefence.ui.InfoBuyPage;
 import com.thetechnoobs.typicaltowerdefence.ui.InfoUpgradePage;
 import com.thetechnoobs.typicaltowerdefence.ui.TowerBuySelectWheel;
+import com.thetechnoobs.typicaltowerdefence.ui.WaveInfoHeader;
 
 import java.util.ArrayList;
 
 public class GameView extends SurfaceView implements Runnable {
+
     boolean running = true;
     private int frames;
     private double delta;
@@ -31,12 +35,14 @@ public class GameView extends SurfaceView implements Runnable {
     int[] screenSize;
     Canvas canvas;
     CoinHeader coinHeader;
+    WaveInfoHeader waveInfoHeader;
     int mapToLoad = 0;
     TowerBuySelectWheel towerSelectionWheel;
     InfoBuyPage infoBuyPage;
     InfoUpgradePage infoUpgradePage;
     UserData userData;
     ArrayList<EnemyBase> targets = new ArrayList<>();
+    private boolean readyForWave = false;
 
     public GameView(Context context, int[] screenSize, int mapToLoad) {
         super(context);
@@ -44,6 +50,7 @@ public class GameView extends SurfaceView implements Runnable {
         this.mapToLoad = mapToLoad;
         this.screenSize = screenSize;
         coinHeader = new CoinHeader(getResources(), context, userData);
+        waveInfoHeader = new WaveInfoHeader();
 
         setMapData(mapToLoad);
 
@@ -51,16 +58,6 @@ public class GameView extends SurfaceView implements Runnable {
         infoUpgradePage = new InfoUpgradePage(context, userData);
         towerSelectionWheel = new TowerBuySelectWheel(getResources(), infoBuyPage);
 
-        startWaveManager();
-
-    }
-
-    Thread waveManagerThread;
-    WaveManager waveManager;
-    private void startWaveManager() {
-        waveManager = new WaveManager(getContext(), this, screenSize);
-        waveManagerThread = new Thread(waveManager);
-        waveManagerThread.start();
     }
 
     @Override
@@ -96,33 +93,49 @@ public class GameView extends SurfaceView implements Runnable {
         }
     }
 
-    private void tick() {
+    long lastEnemySpawnTime = 0;
+    int enemyIterationVar = 0;
 
-        for(int t = 0; t < targets.size(); t++){
-            if(targets.get(t).getHeath() <= 0){
+    private void tick() {
+        waveInfoHeader.update();
+
+        long curSysTime = System.currentTimeMillis();
+        if (readyForWave && curSysTime - lastEnemySpawnTime > 1000) {
+            if(enemyIterationVar >= tempEnemysArray.size()){
+                enemyIterationVar = 0;
+                readyForWave = false;
+            }else{
+                targets.add(tempEnemysArray.get(enemyIterationVar));
+                enemyIterationVar++;
+                lastEnemySpawnTime = curSysTime;
+            }
+        }
+
+        for (int t = 0; t < targets.size(); t++) {
+            if (targets.get(t).getHeath() <= 0) {
                 userData.addCoins(targets.get(t).getDeathReward());
             }
 
-            if(targets.get(t).shouldRemove()){
+            if (targets.get(t).shouldRemove()) {
                 targets.remove(t);
-            }else{
+            } else {
                 targets.get(t).update();
             }
         }
 
-        for (PlotHandler plotHandler: plotHandlers){
+        for (PlotHandler plotHandler : plotHandlers) {
             plotHandler.update(targets);
 
-            if(infoUpgradePage.shouldShow() && plotInFocus == plotHandler.getPlotID()){
+            if (infoUpgradePage.shouldShow() && plotInFocus == plotHandler.getPlotID()) {
                 plotHandler.setShowRange(true);
                 infoUpgradePage.update();
-            }else{
+            } else {
                 plotHandler.setShowRange(false);
             }
 
 
             //update buy pannel if its showing
-            if(infoBuyPage.shouldShow()){
+            if (infoBuyPage.shouldShow()) {
                 infoBuyPage.update();
             }
         }
@@ -135,8 +148,9 @@ public class GameView extends SurfaceView implements Runnable {
             selectedMap().draw(canvas);
 
             coinHeader.draw(canvas);
+            waveInfoHeader.draw(canvas);
 
-            for(int t = 0; t < targets.size(); t++){
+            for (int t = 0; t < targets.size(); t++) {
                 targets.get(t).draw(canvas);
             }
 
@@ -152,13 +166,12 @@ public class GameView extends SurfaceView implements Runnable {
                 infoBuyPage.draw(canvas);
             }
 
-            if(infoUpgradePage.shouldShow()){
+            if (infoUpgradePage.shouldShow()) {
                 infoUpgradePage.draw(canvas);
             }
 
             getHolder().unlockCanvasAndPost(canvas);
         }
-
     }
 
     @Override
@@ -169,26 +182,33 @@ public class GameView extends SurfaceView implements Runnable {
                 event.getX() + Tools.convertDpToPixel(5),
                 event.getY() + Tools.convertDpToPixel(5));
 
-        switch (event.getAction()) {
-            case MotionEvent.ACTION_DOWN:
-                presedDown(touchPoint);
-                break;
+        if(event.getAction() == MotionEvent.ACTION_DOWN) {
+            presedDown(touchPoint);
         }
 
         return true;
     }
 
+    ArrayList<EnemyBase> tempEnemysArray = new ArrayList<>();
+
     private void presedDown(RectF touchPoint) {
         boolean plotTouched = false;
 
+        //if user tapes send wave button
+        if (waveInfoHeader.sendWaveButtonPushed(touchPoint)) {
+            targets.add(new EasySlowEnemy(screenSize[0]/2, screenSize[1], screenSize, selectedMap().enemyPathPoints(), getResources()));
+            readyForWave = true;
+            return;
+        }
+
         //check if buy button is pushed from buy pannel while is being shown
         if (infoBuyPage.shouldShow() && infoBuyPage.buyButtonPushed(touchPoint)) {
-            if(userData.getUserCoins() >= infoBuyPage.getPrice()){
+            if (userData.getUserCoins() >= infoBuyPage.getPrice()) {
                 userData.removeCoins(infoBuyPage.getPrice());
                 plotInPos(plotInFocus).setTowerType(infoBuyPage.getLoadedTower());
                 infoBuyPage.setShowMe(false);
                 towerSelectionWheel.setShowMe(false);
-            }else{
+            } else {
                 infoBuyPage.setShowMe(true);
                 towerSelectionWheel.setShowMe(true);
             }
@@ -196,9 +216,9 @@ public class GameView extends SurfaceView implements Runnable {
         }
 
         //check if remove button was pushed while info upgrade page is bing shown
-        if(infoUpgradePage.shouldShow() && infoUpgradePage.removeBtnPushed(touchPoint)){
-            for(PlotHandler plotHandler: plotHandlers){
-                if(plotInFocus == plotHandler.getPlotID()){
+        if (infoUpgradePage.shouldShow() && infoUpgradePage.removeBtnPushed(touchPoint)) {
+            for (PlotHandler plotHandler : plotHandlers) {
+                if (plotInFocus == plotHandler.getPlotID()) {
                     plotHandler.removeTower();
                 }
             }
@@ -206,10 +226,10 @@ public class GameView extends SurfaceView implements Runnable {
         }
 
         //check if upgrade button is pushed while info upgrade page is showing
-        if(infoUpgradePage.shouldShow() && infoUpgradePage.upgradeButtonPushed(touchPoint)){
-            for(PlotHandler plotHandler: plotHandlers){
-                if(plotInFocus == plotHandler.getPlotID()){
-                    if(userData.getUserCoins() >= infoUpgradePage.getPrice()){
+        if (infoUpgradePage.shouldShow() && infoUpgradePage.upgradeButtonPushed(touchPoint)) {
+            for (PlotHandler plotHandler : plotHandlers) {
+                if (plotInFocus == plotHandler.getPlotID()) {
+                    if (userData.getUserCoins() >= infoUpgradePage.getPrice()) {
                         userData.removeCoins(infoUpgradePage.getPrice());
                         plotHandler.upgradeTowerOneLevel();
                     }
@@ -258,15 +278,12 @@ public class GameView extends SurfaceView implements Runnable {
         }
     }
 
-    public void addTestEnemy(EnemyBase enemyBase){
-            targets.add(enemyBase);
-    }
-
     MapOne mapOne;
     MapTwo mapTwo;
     MapThree mapThree;
+
     private void setMapData(int mapToLoad) {
-        switch (mapToLoad){
+        switch (mapToLoad) {
             case 0:
                 Toast.makeText(getContext(), "Error loading selected map", Toast.LENGTH_LONG).show();
                 return;
@@ -284,13 +301,13 @@ public class GameView extends SurfaceView implements Runnable {
                 break;
         }
 
-        for(PlotHandler handler: plotHandlers){
+        for (PlotHandler handler : plotHandlers) {
             handler.setScreenSize(screenSize);
         }
     }
 
-    public MapBase selectedMap(){
-        switch (mapToLoad){
+    public MapBase selectedMap() {
+        switch (mapToLoad) {
             case 1:
                 return mapOne;
             case 2:
@@ -308,7 +325,6 @@ public class GameView extends SurfaceView implements Runnable {
 
     public void cleanUp() {
         running = false;
-        waveManager.stop();
     }
 
     public PlotHandler plotInPos(int pos) {
@@ -325,4 +341,6 @@ public class GameView extends SurfaceView implements Runnable {
         Thread thread = new Thread(this);
         thread.start();
     }
+
+
 }

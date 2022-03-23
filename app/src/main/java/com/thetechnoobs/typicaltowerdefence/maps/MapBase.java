@@ -13,7 +13,7 @@ import java.util.ArrayList;
 
 //Plot size should be 80 by 80 dp
 
-public class MapBase {
+public abstract class MapBase {
     public Bitmap mapBitmap;
     Resources resources;
     int[] screenSize;
@@ -23,6 +23,8 @@ public class MapBase {
 
     public void draw(Canvas canvas){
     }
+
+    public abstract ArrayList<RectF> getEnemyPathPoints();
 
     public Bitmap getMapBitmap() {
         return mapBitmap;

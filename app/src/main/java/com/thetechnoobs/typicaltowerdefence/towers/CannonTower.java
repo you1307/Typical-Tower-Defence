@@ -19,6 +19,8 @@ public class CannonTower extends TowerBase {
 
     CannonTowerData cannonTowerData;
     ArrayList<CannonBall> cannonBalls = new ArrayList<>();
+    private RectF rangBox;
+
 
     public CannonTower(Context context, RectF location, CannonTowerData cannonTowerData, int[] screenSize) {
         resources = context.getResources();
@@ -33,7 +35,16 @@ public class CannonTower extends TowerBase {
         testPaint.setAlpha(60);
 
         setupBitmap();
+        setRangBox();
         settupRangeHitbox();
+    }
+
+    public void setRangBox() {
+        rangBox = new RectF(
+                (int) location.centerX() - (cannonTowerData.getRange()),
+                (int) location.centerY() - (cannonTowerData.getRange()),
+                (int) (location.centerX() + (cannonTowerData.getRange())),
+                (int) (location.centerY() + (cannonTowerData.getRange())));
     }
 
     @Override
@@ -108,13 +119,7 @@ public class CannonTower extends TowerBase {
     }
 
     public RectF getRangeBox() {
-        RectF tempR = new RectF(
-                (int) location.centerX() - (cannonTowerData.getRange()),
-                (int) location.centerY() - (cannonTowerData.getRange()),
-                (int) (location.centerX() + (cannonTowerData.getRange())),
-                (int) (location.centerY() + (cannonTowerData.getRange())));
-
-        return tempR;
+        return rangBox;
     }
 
 

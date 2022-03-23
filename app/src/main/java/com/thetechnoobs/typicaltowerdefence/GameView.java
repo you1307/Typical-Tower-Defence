@@ -42,7 +42,6 @@ public class GameView extends SurfaceView implements Runnable {
     InfoUpgradePage infoUpgradePage;
     UserData userData;
     ArrayList<EnemyBase> targets = new ArrayList<>();
-    private boolean readyForWave = false;
 
     public GameView(Context context, int[] screenSize, int mapToLoad) {
         super(context);
@@ -93,23 +92,7 @@ public class GameView extends SurfaceView implements Runnable {
         }
     }
 
-    long lastEnemySpawnTime = 0;
-    int enemyIterationVar = 0;
-
     private void tick() {
-        waveInfoHeader.update();
-
-        long curSysTime = System.currentTimeMillis();
-        if (readyForWave && curSysTime - lastEnemySpawnTime > 1000) {
-            if(enemyIterationVar >= tempEnemysArray.size()){
-                enemyIterationVar = 0;
-                readyForWave = false;
-            }else{
-                targets.add(tempEnemysArray.get(enemyIterationVar));
-                enemyIterationVar++;
-                lastEnemySpawnTime = curSysTime;
-            }
-        }
 
         for (int t = 0; t < targets.size(); t++) {
             if (targets.get(t).getHeath() <= 0) {
@@ -182,22 +165,19 @@ public class GameView extends SurfaceView implements Runnable {
                 event.getX() + Tools.convertDpToPixel(5),
                 event.getY() + Tools.convertDpToPixel(5));
 
-        if(event.getAction() == MotionEvent.ACTION_DOWN) {
+        if (event.getAction() == MotionEvent.ACTION_DOWN) {
             presedDown(touchPoint);
         }
 
         return true;
     }
 
-    ArrayList<EnemyBase> tempEnemysArray = new ArrayList<>();
-
     private void presedDown(RectF touchPoint) {
         boolean plotTouched = false;
 
         //if user tapes send wave button
         if (waveInfoHeader.sendWaveButtonPushed(touchPoint)) {
-            targets.add(new EasySlowEnemy(screenSize[0]/2, screenSize[1], screenSize, selectedMap().enemyPathPoints(), getResources()));
-            readyForWave = true;
+            targets.add(new EasySlowEnemy(screenSize[0] / 2, screenSize[1], screenSize, selectedMap().getEnemyPathPoints(), getResources()));
             return;
         }
 

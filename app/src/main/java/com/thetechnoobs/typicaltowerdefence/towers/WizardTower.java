@@ -21,6 +21,7 @@ public class WizardTower extends TowerBase {
 
     WizardTowerData wizardTowerData;
     ArrayList<WizardOrb> orbs = new ArrayList<>();
+    RectF rangBox;
 
     public WizardTower(Context context, RectF location, WizardTowerData wizardTowerData, int[] screenSize) {
         resources = context.getResources();
@@ -35,7 +36,16 @@ public class WizardTower extends TowerBase {
         testPaint.setAlpha(60);
 
         setupBitmap();
+        setRangBox();
         settupRangeHitbox();
+    }
+
+    public void setRangBox(){
+        rangBox = new RectF(
+                (int) location.centerX() - (wizardTowerData.getRange()),
+                (int) location.centerY() - (wizardTowerData.getRange()),
+                (int) (location.centerX() + (wizardTowerData.getRange())),
+                (int) (location.centerY() + (wizardTowerData.getRange())));
     }
 
     @Override
@@ -113,13 +123,7 @@ public class WizardTower extends TowerBase {
 
     @Override
     public RectF getRangeBox() {
-        RectF tempR = new RectF(
-                (int) location.centerX() - (wizardTowerData.getRange()),
-                (int) location.centerY() - (wizardTowerData.getRange()),
-                (int) (location.centerX() + (wizardTowerData.getRange())),
-                (int) (location.centerY() + (wizardTowerData.getRange())));
-
-        return tempR;
+        return rangBox;
     }
 
     RectF rangeHitbox;

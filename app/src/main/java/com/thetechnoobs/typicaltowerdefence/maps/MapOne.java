@@ -16,14 +16,17 @@ import java.util.ArrayList;
 
 public class MapOne extends MapBase {
 
+    ArrayList<RectF> enemyPathPoints;
+
     public MapOne(int[] screenSize, Resources resources, Context context) {
         this.screenSize = screenSize;
         this.resources = resources;
         this.context = context;
         testPaint.setColor(Color.RED);
 
-
         settupBitmap();
+
+        enemyPathPoints = enemyPathPoints();
         plotHandlers = getMapOnePlots(context);
     }
 
@@ -76,7 +79,6 @@ public class MapOne extends MapBase {
 
         return plotHandlers;
     }
-
 
     @Override
     public ArrayList<RectF> enemyPathPoints() {
@@ -139,6 +141,11 @@ public class MapOne extends MapBase {
     @Override
     public void draw(Canvas canvas) {
         canvas.drawBitmap(mapBitmap, 0, 0, null);
+    }
+
+    @Override
+    public ArrayList<RectF> getEnemyPathPoints() {
+        return enemyPathPoints;
     }
 
 

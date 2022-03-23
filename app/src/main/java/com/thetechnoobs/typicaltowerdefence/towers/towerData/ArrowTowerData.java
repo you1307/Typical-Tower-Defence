@@ -1,12 +1,14 @@
 package com.thetechnoobs.typicaltowerdefence.towers.towerData;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.thetechnoobs.typicaltowerdefence.Tools;
 
 import java.util.Random;
 
 public class ArrowTowerData {
+    private static final String TAG = "ArrowTowerData";
     Context context;
     int damage, price;
     float range;

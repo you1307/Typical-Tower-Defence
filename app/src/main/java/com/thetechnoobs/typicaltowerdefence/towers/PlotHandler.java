@@ -246,21 +246,25 @@ public class PlotHandler {
             case 1:
                 if (arrowTowerData != null) {
                     arrowTowerData.upgrade();
+                    arrowTower.setRangBox();
                 }
                 break;
             case 2:
                 if (cannonTowerData != null) {
                     cannonTowerData.upgrade();
+                    cannonTower.setRangBox();
                 }
                 break;
             case 3:
                 if (troopsTower != null) {
                     //troopsTower.upgrade();
+                    //troopsTower.setRangBox();
                 }
                 break;
             case 4:
                 if (wizardTowerData != null) {
                     wizardTowerData.upgrade();
+                    wizardTower.setRangBox();
                 }
                 break;
         }

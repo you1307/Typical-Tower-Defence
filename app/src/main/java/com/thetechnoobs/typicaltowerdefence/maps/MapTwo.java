@@ -17,14 +17,17 @@ import com.thetechnoobs.typicaltowerdefence.towers.PlotHandler;
 import java.util.ArrayList;
 
 public class MapTwo extends MapBase {
+    ArrayList<RectF> enemyPathPoints;
 
     public MapTwo(int[] screenSize, Resources resources, Context context) {
+        super();
         this.screenSize = screenSize;
         this.resources = resources;
         this.context = context;
         testPaint.setColor(Color.RED);
-
         settupBitmap();
+
+        enemyPathPoints = enemyPathPoints();
         plotHandlers = getMapTwoPlots(context);
     }
 
@@ -139,6 +142,11 @@ public class MapTwo extends MapBase {
     @Override
     public void draw(Canvas canvas) {
         canvas.drawBitmap(mapBitmap, 0, 0, null);
+    }
+
+    @Override
+    public ArrayList<RectF> getEnemyPathPoints() {
+        return enemyPathPoints;
     }
 
     public ArrayList<PlotHandler> getMapTwoPlots() {

@@ -19,6 +19,7 @@ public class ArrowTower extends TowerBase {
 
     ArrowTowerData arrowTowerData;
     ArrayList<Arrow> arrows = new ArrayList<>();
+    RectF rangBox;
 
     public ArrowTower(Context context, RectF location, ArrowTowerData arrowTowerData, int[] screenSize) {
         resources = context.getResources();
@@ -33,7 +34,16 @@ public class ArrowTower extends TowerBase {
         testPaint.setAlpha(60);
 
         setupBitmap();
+        setRangBox();
         settupRangeHitbox();
+    }
+
+    public void setRangBox() {
+        rangBox = new RectF(
+                (int) location.centerX() - (arrowTowerData.getRange()),
+                (int) location.centerY() - (arrowTowerData.getRange()),
+                (int) (location.centerX() + (arrowTowerData.getRange())),
+                (int) (location.centerY() + (arrowTowerData.getRange())));
     }
 
     @Override
@@ -78,13 +88,7 @@ public class ArrowTower extends TowerBase {
 
     @Override
     public RectF getRangeBox() {
-        RectF tempR = new RectF(
-                (int) location.centerX() - (arrowTowerData.getRange()),
-                (int) location.centerY() - (arrowTowerData.getRange()),
-                (int) (location.centerX() + (arrowTowerData.getRange())),
-                (int) (location.centerY() + (arrowTowerData.getRange())));
-
-        return tempR;
+        return rangBox;
     }
 
     @Override

@@ -109,7 +109,7 @@ public class EasySlowEnemy extends EnemyBase {
             canvas.drawBitmap(curDirectionSpriteSheet, getFrame(), getHitbox(), null);
         }
 
-        //canvas.drawRect(getHitbox(), debugPaint);
+        canvas.drawRect(getHitbox(), debugPaint);
     }
 
     public RectF getHitbox() {

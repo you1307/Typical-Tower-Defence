@@ -119,8 +119,6 @@ public abstract class EnemyBase {
         } else {
             //direction = 4;
         }
-
-        Log.v("vel", "angle: " + getAngle(xVelocity, yVelocity) + "----Direction: " + direction);
     }
 
     boolean walking = true;

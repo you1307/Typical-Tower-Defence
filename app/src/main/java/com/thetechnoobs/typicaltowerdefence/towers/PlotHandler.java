@@ -87,7 +87,7 @@ public class PlotHandler {
                     cannonTower.update();
                     break;
                 case 3:
-                    troopsTower.update();
+                    //troopsTower.update();
                     break;
                 case 4:
                     wizardTower.updateTargets(targets);

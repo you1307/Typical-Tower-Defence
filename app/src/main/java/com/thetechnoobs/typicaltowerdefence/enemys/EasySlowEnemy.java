@@ -19,13 +19,15 @@ public class EasySlowEnemy extends EnemyBase {
     Bitmap walkingUpSpriteSheet, walkingLeftSpriteSheet, walkingRightSpriteSheet, walkingDownSpriteSheet;
     Bitmap curDirectionSpriteSheet;
     int spriteWidth, spriteHeight;
+    Context context;
 
-    public EasySlowEnemy(int x, int y, int[] screenSize, ArrayList<RectF> mapPath, Resources resources) {
+    public EasySlowEnemy(int x, int y, int[] screenSize, ArrayList<RectF> mapPath, Context context) {
         setCurX(x);
         setCurY(y);
         this.mapPath = mapPath;
         this.screenSize = screenSize;
-        this.resources = resources;
+        this.context = context;
+        this.resources = context.getResources();
         this.MAX_HEATH = 15;
         this.curHeath = MAX_HEATH;
 
@@ -109,11 +111,16 @@ public class EasySlowEnemy extends EnemyBase {
             canvas.drawBitmap(curDirectionSpriteSheet, getFrame(), getHitbox(), null);
         }
 
-        canvas.drawRect(getHitbox(), debugPaint);
+        //canvas.drawRect(getHitbox(), debugPaint);
     }
 
+    RectF hitBox = new RectF(getCurX(), getCurY(), getCurX() + (float) Tools.convertDpToPixel(30), getCurY() + (float) Tools.convertDpToPixel(30));
     public RectF getHitbox() {
-        return new RectF(getCurX(), getCurY(), getCurX() + (float) Tools.convertDpToPixel(30), getCurY() + (float) Tools.convertDpToPixel(30));
+        hitBox.left = getCurX();
+        hitBox.top = getCurY();
+        hitBox.right = getCurX() + (float) Tools.convertDpToPixel(30);
+        hitBox.bottom = getCurY() + (float) Tools.convertDpToPixel(30);
+        return hitBox;
     }
 }
 

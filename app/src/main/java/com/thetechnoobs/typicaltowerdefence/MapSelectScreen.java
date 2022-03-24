@@ -38,6 +38,6 @@ public class MapSelectScreen extends AppCompatActivity {
         }
 
         startActivity(goToGameView);
-
+        finish();
     }
 }

@@ -43,6 +43,7 @@ public class Arrow extends ProjectileBase{
     public void checkCollision() {
         if (getHitbox().intersect(target.getHitbox())) {
             target.addDamage(damage);
+            target = null;
             removeMe = true;
         }
     }

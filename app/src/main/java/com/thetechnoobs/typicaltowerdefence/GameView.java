@@ -24,6 +24,9 @@ import com.thetechnoobs.typicaltowerdefence.ui.TowerBuySelectWheel;
 import com.thetechnoobs.typicaltowerdefence.ui.WaveInfoHeader;
 
 import java.util.ArrayList;
+import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class GameView extends SurfaceView implements Runnable {
 
@@ -167,17 +170,25 @@ public class GameView extends SurfaceView implements Runnable {
 
         if (event.getAction() == MotionEvent.ACTION_DOWN) {
             presedDown(touchPoint);
+            return true;
         }
 
         return true;
     }
 
+    Executor executor = Executors.newSingleThreadExecutor();
     private void presedDown(RectF touchPoint) {
         boolean plotTouched = false;
 
         //if user tapes send wave button
         if (waveInfoHeader.sendWaveButtonPushed(touchPoint)) {
-            targets.add(new EasySlowEnemy(screenSize[0] / 2, screenSize[1], screenSize, selectedMap().getEnemyPathPoints(), getResources()));
+            executor.execute(new Runnable() {
+                @Override
+                public void run() {
+                    targets.add(new EasySlowEnemy(screenSize[0] / 2, screenSize[1], screenSize, selectedMap().getEnemyPathPoints(), getContext()));
+                }
+            });
+
             return;
         }
 
